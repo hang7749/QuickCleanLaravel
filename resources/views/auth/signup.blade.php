@@ -8,7 +8,7 @@
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 <body class="bg-gray-50">
-    <div class="min-h-screen flex flex-col bg-black items-center justify-center px-6 py-10">
+    <div class="min-h-screen flex flex-col bg-black items-center justify-center px-6 py-10" style="background-color: #040319">
         <div class="text-center">
             <img src="../quick_clean.png" alt="Girl in a jacket" style="width: 250px;">
         </div>
