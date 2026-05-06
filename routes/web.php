@@ -42,7 +42,7 @@ Route::middleware(['auth'])->group(function () {
     // Profile Management
     Route::prefix('profile')->name('profile.')->group(function () {
         Route::get('/', [ProfileController::class, 'index'])->name('index'); // profile.index
-        Route::put('/update', [ProfileController::class, 'updateName'])->name('update'); // profile.update
+        Route::put('/update', [ProfileController::class, 'updateUsername'])->name('update'); // profile.update
         Route::put('/password', [ProfileController::class, 'updatePassword'])->name('password'); // profile.password
     });
 

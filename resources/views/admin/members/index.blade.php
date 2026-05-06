@@ -33,11 +33,9 @@
                 @foreach($members as $member)
                 <tr>
                     <td>
-                        <div style="display: flex; align-items: center; gap: 10px;">
-                            <div style="width: 32px; height: 32px; background: #e2e8f0; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 12px; color: #475569;">
-                                {{ strtoupper(substr($member->name, 0, 1)) }}
-                            </div>
+                        <div style="display: flex; flex-direction: column;">
                             <span style="font-weight: 600;">{{ $member->name }}</span>
+                            <span style="font-size: 12px; color: #64748b;">{{ $member->username ? '@' . $member->username : 'No username' }}</span>
                         </div>
                     </td>
                     <td style="color: #64748b;">{{ $member->email }}</td>

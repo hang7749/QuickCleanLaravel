@@ -25,22 +25,24 @@ class AdminMemberController extends Controller
         return view('admin.members.edit', compact('member'));
     }
 
-    public function update(Request $request, String $id)
+    public function update(Request $request, $id)
     {
         $request->validate([
             'name' => 'required|string|max:255',
-            'email' => 'required|email',
+            'username' => 'nullable|string|max:50|unique:users,username,' . $id, // Unique except for this user
+            'email' => 'required|email|unique:users,email,' . $id,
         ]);
 
         DB::table('users')->where('id', $id)->update([
             'name' => $request->name,
+            'username' => $request->username,
             'email' => $request->email,
             'updated_at' => now(),
         ]);
 
         return redirect()->route('admin.members.index')->with('success', 'Member profile updated.');
     }
-
+    
     public function destroy(String $id)
     {
         DB::table('users')->where('id', $id)->delete();

@@ -26,10 +26,11 @@
             <form action="{{ url('/signup') }}" method="POST" class="space-y-5">
                 @csrf
                 <div>
-                    <label class="text-xs font-bold text-gray-400 uppercase ml-1">Full Name</label>
-                    <input type="text" name="name" value="{{ old('name') }}" placeholder="Abu Kasim" required
+                    <label class="text-xs font-bold text-gray-400 uppercase ml-1">Username</label>
+                    <input type="text" name="username" value="{{ old('username') }}" placeholder="Abu Kasim" required
                         class="w-full mt-1 px-5 py-4 bg-gray-50 border-none rounded-2xl focus:ring-2 focus:ring-blue-500 transition-all">
                 </div>
+
 
                 <div>
                     <label class="text-xs font-bold text-gray-400 uppercase ml-1">Email</label>

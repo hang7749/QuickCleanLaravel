@@ -181,7 +181,7 @@
 
 {{-- App Bar --}}
 <header class="topbar">
-    <button class="back-btn" onclick="history.back()">&#8592;</button>
+    <a href="{{ url('/home') }}" class="back-btn" style="text-decoration: none; display: inline-block;">&#8592;</a>
     <h1>Book {{ $serviceName }}</h1>
 </header>
 

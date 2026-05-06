@@ -48,13 +48,14 @@ class SupabaseLoginController extends Controller
 
     public function register(Request $request)
     {
+        // 1. Add username to validation
         $data = $request->validate([
-            'name'     => 'required|string|max:255',
+            'username' => 'required|string|max:50|unique:users,username', 
             'email'    => 'required|email',
             'password' => 'required|min:6',
         ]);
 
-        // 1. Call Supabase Auth Signup API
+        // 2. Call Supabase Auth Signup API
         $response = Http::withHeaders([
             'apikey' => env('SUPABASE_KEY'),
             'Content-Type' => 'application/json',
@@ -62,7 +63,10 @@ class SupabaseLoginController extends Controller
             'email'    => $data['email'],
             'password' => $data['password'],
             'options'  => [
-                'data' => ['full_name' => $data['name']] // Stores name in Supabase metadata
+                'data' => [
+                    'full_name' => $data['username'],
+                    'username'  => $data['username'], //
+                ]
             ]
         ]);
 
@@ -72,14 +76,16 @@ class SupabaseLoginController extends Controller
         }
 
         if ($response->successful()) {
-        
+            // We wait a tiny bit for the Supabase trigger to sync to our 'public.users' table
+            sleep(1); 
+
             $user = User::where('email', $data['email'])->first();
-            Auth::login($user);
-
-            return redirect('/home');
+            
+            if ($user) {
+                Auth::login($user);
+                return redirect('/home')->with('success', 'Welcome, ' . $user->username . '!');
+            }
         }
-
-
 
         return redirect('/')->with('success', 'Account created successfully!');
     }

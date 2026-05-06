@@ -171,7 +171,7 @@
     <div class="sidebar-overlay" id="overlay" onclick="toggleMenu()"></div>
 
     <aside class="sidebar" id="sidebar">
-        <img src="../quick_clean.png" alt="Girl in a jacket" style="width: 250px;">
+        <img src="{{ asset('quick_clean.png') }}" style="width: 250px;">
         <div class="sidebar-brand">
    
             Admin Panel
@@ -195,7 +195,7 @@
             <div></div> 
 
             <div style="display: flex; align-items: center; gap: 12px; margin-left: auto;">
-                <span style="font-size: 14px; font-weight: 600; color: #64748b;">{{ auth()->user()->name }}</span>
+                {{-- <span style="font-size: 14px; font-weight: 600; color: #64748b;">{{ auth()->user()->username }}</span> --}}
                 <form action="{{ route('logout') }}" method="POST" style="margin: 0;">
                     @csrf
                     <button type="submit" class="btn-logout">Logout</button>

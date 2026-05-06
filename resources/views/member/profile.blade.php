@@ -204,7 +204,7 @@
 @section('content')
 
 <header class="topbar">
-    <button class="back-btn" onclick="history.back()">&#8592;</button>
+   <a href="{{ url('/home') }}" class="back-btn" style="text-decoration: none; display: inline-block;">&#8592;</a>
     <h1>Profile Details</h1>
 </header>
 
@@ -236,16 +236,16 @@
             </div>
         </div>
 
-        {{-- Full Name --}}
+        {{-- Username --}}
         <div class="field-group" style="margin-bottom: 24px;">
-            <label>Full Name</label>
+            <label>Username</label>
             <div class="input-wrap">
                 <span class="icon">👤</span>
-                <input type="text" name="name" id="name-input"
-                       value="{{ old('name', $user['name']) }}"
-                       placeholder="Enter your full name" required>
+                <input type="text" name="username" id="username-input"
+                       value="{{ old('username', $user['username']) }}"
+                       placeholder="Enter your username" required>
             </div>
-            @error('name')
+            @error('username')
                 <span style="font-size:12px; color:#b91c1c;">{{ $message }}</span>
             @enderror
         </div>

@@ -224,11 +224,11 @@
                  src="https://images.pexels.com/photos/355164/pexels-photo-355164.jpeg?crop=faces&fit=crop&h=200&w=200&auto=compress&cs=tinysrgb"
                  alt="User avatar">
             <div class="info">
-                <h2>Hello, {{ $user['name'] ?? 'Guest' }}</h2>
+                <h2>Hello, {{ $user['username'] ?? 'Guest' }}</h2>
                 <p>{{ $user['email'] ?? '-' }}</p>
             </div>
         </div>
-        <a href="{{ route('profile') }}" class="view-profile-btn">View Profile</a>
+        <a href="{{ route('profile.index') }}" class="view-profile-btn">View Profile</a>
     </div>
 
     {{-- My Bookings Banner --}}

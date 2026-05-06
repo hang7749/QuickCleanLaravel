@@ -20,20 +20,20 @@ class ProfileController extends Controller
     }
 
     /**
-     * Update the user's display name.
-     * Replaces: supabase.from('users').update({name}).eq('id', userId)
+     * Update the user's display username.
+     * Replaces: supabase.from('users').update({username}).eq('id', userId)
      */
-    public function updateName(Request $request)
+    public function updateUsername(Request $request)
     {
         $request->validate([
-            'name' => 'required|string|max:255',
+            'username' => 'required|string|max:255',
         ]);
 
         $user = User::find(Auth::id());
-        $user->name = $request->name;
+        $user->username = $request->username;
         $user->save();
 
-        return back()->with('success', 'Profile name updated successfully!');
+        return back()->with('success', 'Profile username updated successfully!');
     }
 
     /**

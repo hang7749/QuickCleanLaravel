@@ -36,6 +36,7 @@ class AdminListController extends Controller
         DB::table('users')->insert([
             'id' => (string) Str::uuid(),
             'name' => $request->name,
+            'username' => $request->name ?? null, // Admins don't need usernames
             'email' => $request->email,
             'password' => Hash::make($request->password), // Securely hash password
             'role' => 'admin',
