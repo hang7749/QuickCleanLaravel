@@ -228,7 +228,7 @@
                 <p>{{ $user['email'] ?? '-' }}</p>
             </div>
         </div>
-        <a href="{{ route('profile') }}" class="view-profile-btn">View Profile </a>
+        <a href="{{ route('profile') }}" class="view-profile-btn">View Profile</a>
     </div>
 
     {{-- My Bookings Banner --}}
