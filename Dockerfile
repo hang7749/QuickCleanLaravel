@@ -1,30 +1,31 @@
 # Stage 1: Build the vendor folder
-FROM composer:2 as build
+FROM composer:latest as build
 WORKDIR /app
 COPY . .
-RUN composer install --no-dev --optimize-autoloader --no-interaction
+# We ignore platform reqs here just to ensure the build finishes
+RUN composer install --no-dev --optimize-autoloader --no-interaction --ignore-platform-reqs
 
-# Stage 2: Final Web Server
-FROM richarvey/nginx-php-fpm:3.1.6
+# Stage 2: Final Web Server (Using PHP 8.4)
+FROM php:8.4-fpm-alpine
+
+# Install Nginx and system dependencies
+RUN apk add --no-cache nginx wget
+
+# Install PHP extensions needed for Laravel
+RUN docker-php-ext-install bcmath opcache
+
+# Setup Working Directory
 WORKDIR /var/www/html
 
-# Copy everything from our local folder
+# Copy project and vendor
 COPY . .
-
-# Copy the VENDOR folder specifically from the build stage
 COPY --from=build /app/vendor /var/www/html/vendor
 
-# Configuration
-ENV WEBROOT /var/www/html/public
-ENV PHP_ERRORS_STDERR 1
-ENV RUN_SCRIPTS 1
-ENV REAL_IP_HEADER 1
-ENV APP_ENV production
-ENV APP_DEBUG false
+# Setup Nginx Configuration
+COPY .docker/nginx.conf /etc/nginx/http.d/default.conf
 
 # Permissions
-RUN chmod -R 775 /var/www/html/storage /var/www/html/bootstrap/cache
 RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache
 
-EXPOSE 80
-RUN chmod +x /var/www/html/scripts/00-laravel-deploy.sh
+# Start Nginx and PHP-FPM
+CMD ["sh", "-c", "php-fpm -D && nginx -g 'daemon off;'"]
