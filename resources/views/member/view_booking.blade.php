@@ -1,7 +1,7 @@
 {{-- resources/views/view_booking.blade.php --}}
 @extends('layouts.member_app')
 
-@section('title', 'My Bookings')
+@section('title', 'QuickClean - ' . __('page.myBookings'))
 
 @push('styles')
 <style>
@@ -181,11 +181,11 @@
 <header class="topbar">
     <div class="topbar-row">
         <button class="back-btn" onclick="history.back()">&#8592;</button>
-        <h1>My Bookings</h1>
+        <h1>{{ __('page.myBookings') }}</h1>
     </div>
     <div class="tab-bar">
-        <button class="tab-btn active" onclick="switchTab('upcoming', this)">Upcoming</button>
-        <button class="tab-btn"        onclick="switchTab('history', this)">History</button>
+        <button class="tab-btn active" onclick="switchTab('upcoming', this)">{{ __('page.upcoming') }}</button>
+        <button class="tab-btn"        onclick="switchTab('history', this)">{{ __('page.history') }}</button>
     </div>
 </header>
 
@@ -201,7 +201,7 @@
     @forelse ($upcoming as $booking)
         @include('partials.booking_card', ['booking' => $booking])
     @empty
-        <div class="empty-state">No upcoming bookings found.</div>
+        <div class="empty-state">{{ __('page.noBookingsFound') }}</div>
     @endforelse
 </div>
 
@@ -210,21 +210,21 @@
     @forelse ($history as $booking)
         @include('partials.booking_card', ['booking' => $booking])
     @empty
-        <div class="empty-state">No booking history found.</div>
+        <div class="empty-state">{{ __('page.noBookingsFound') }}</div>
     @endforelse
 </div>
 
 {{-- Cancel Confirm Dialog --}}
 <div class="dialog-overlay" id="cancel-dialog">
     <div class="dialog-box">
-        <h2>Cancel Booking?</h2>
-        <p>Are you sure you want to cancel this service?</p>
+        <h2>{{ __('page.cancelBooking') }}</h2>
+        <p>{{ __('page.confirmCancelBooking') }}</p>
         <div class="dialog-actions">
             <button class="btn-no" onclick="document.getElementById('cancel-dialog').classList.remove('show')">No</button>
             <form id="cancel-form" method="POST" style="display:inline">
                 @csrf
                 @method('PUT')
-                <button type="submit" class="btn-yes">Yes, Cancel</button>
+                <button type="submit" class="btn-yes">{{ __('page.cancel') }}</button>
             </form>
         </div>
     </div>

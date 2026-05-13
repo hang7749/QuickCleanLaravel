@@ -1,6 +1,6 @@
 @extends('layouts.member_app')
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-@section('title', 'QuickClean - Home')
+@section('title', "QuickClean - " . __('page.home'))
 
 @push('styles')
 <style>
@@ -19,6 +19,74 @@
         z-index: 100;
     }
     .topbar h1 { font-size: 20px; font-weight: 700; color: #000000; }
+    /* Container for the dropdown */
+    .language-dropdown {
+        position: relative;
+        display: inline-block;
+    }
+
+    /* The Button */
+    .dropbtn {
+        background-color: #fff;
+        color: #3c4043;
+        padding: 8px 12px;
+        font-size: 14px;
+        font-weight: 500;
+        border: 1px solid #dadce0;
+        border-radius: 4px;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .dropbtn:hover {
+        background-color: #f8f9fa;
+    }
+
+    /* Dropdown Content (Hidden by Default) */
+    .dropdown-content {
+        display: none;
+        position: absolute;
+        right: 0; /* Align to the right edge of button */
+        background-color: #fff;
+        min-width: 140px;
+        box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.1);
+        border: 1px solid #e8eaed;
+        border-radius: 4px;
+        z-index: 101;
+        margin-top: 4px;
+    }
+
+    /* Links inside the dropdown */
+    .dropdown-content a {
+        color: #3c4043;
+        padding: 10px 16px;
+        text-decoration: none;
+        display: block;
+        font-size: 14px;
+    }
+
+    /* Change color on hover */
+    .dropdown-content a:hover {
+        background-color: #f1f3f4;
+        color: #1a73e8;
+    }
+
+    /* Show the menu on hover */
+    .language-dropdown:hover .dropdown-content {
+        display: block;
+    }
+
+    /* Simple CSS Arrow */
+    .arrow-down {
+        border: solid #5f6368;
+        border-width: 0 2px 2px 0;
+        display: inline-block;
+        padding: 3px;
+        transform: rotate(45deg);
+        margin-bottom: 2px;
+    }
     .topbar .notif-btn {
         background: none;
         border: none;
@@ -214,6 +282,18 @@
 {{-- Top App Bar --}}
 <header class="topbar">
     <h1>QuickClean</h1>
+
+    <div class="language-dropdown">
+        <button class="dropbtn">
+            🌐 <span>Language</span>
+            <i class="arrow-down"></i>
+        </button>
+        <div class="dropdown-content">
+            <a href="{{ url('lang/en') }}">English</a>
+            <a href="{{ url('lang/zh') }}">中文 (简体)</a>
+            <a href="{{ url('lang/my') }}">Bahasa Melayu</a>
+        </div>
+    </div>
 </header>
 
 <main class="page-body">
@@ -228,20 +308,20 @@
                 <p>{{ $user['email'] ?? '-' }}</p>
             </div>
         </div>
-        <a href="{{ route('profile.index') }}" class="view-profile-btn">View Profile</a>
+        <a href="{{ route('profile.index') }}" class="view-profile-btn">{{ __('page.viewProfile') }}</a>
     </div>
 
     {{-- My Bookings Banner --}}
     <a href="{{ route('booking.index') }}" class="bookings-banner">
         <div>
-            <h3>My Bookings</h3>
-            <p>Check your service schedule</p>
+            <h3>{{ __('page.myBookings') }}</h3>
+            <p>{{ __('page.checkServiceSchedule') }}</p>
         </div>
         <span class="arrow">›</span>
     </a>
 
     {{-- Services Section --}}
-    <p class="section-title">Bookings</p>
+    <p class="section-title">{{ __('page.bookings') }}</p>
     <div class="services-grid">
         @foreach ($services as $index => $service)
             <a href="{{ route('booking.show', ['id' => $service['id']]) }}"
@@ -254,7 +334,7 @@
     </div>
 
     {{-- Top Rated Section --}}
-    <p class="section-title">Top Rated</p>
+    <p class="section-title">{{ __('page.topRated') }}</p>
     <div class="providers-scroll">
         @foreach ($providers as $index => $provider)
             <div class="provider-card" style="animation-delay: {{ $index * 150 }}ms">
@@ -278,24 +358,24 @@
 <nav class="bottom-nav">
     <a href="tel:+123456789" class="nav-item phone">
         <i class="fas fa-phone"></i>
-        <span>Call</span>
+        <span>{{ __('page.phone') }}</span>
     </a>
 
     <a href="https://wa.me/123456789" target="_blank" class="nav-item whatsapp">
         <i class="fab fa-whatsapp"></i>
-        <span>WhatsApp</span>
+        <span>{{ __('page.whatsapp') }}</span>
     </a>
 
     <a href="https://mail.google.com/mail/?view=cm&fs=1&to=info@clean.com&su=Service Inquiry&body=Hello"
        target="_blank"
        class="nav-item email">
         <i class="fas fa-envelope"></i>
-        <span>Email</span>
+        <span>{{ __('page.email') }}</span>
     </a>
 
     <a href="https://m.me/YOUR_PAGE_ID" target="_blank" class="nav-item messenger">
         <i class="fab fa-facebook-messenger"></i>
-        <span>Messenger</span>
+        <span>{{ __('page.messenger') }}</span>
     </a>
 </nav>
 
@@ -304,12 +384,12 @@
     <div id="success-modal" style="position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 9999; display: flex; align-items: center; justify-content: center; padding: 20px;">
         <div style="background: #fff; border-radius: 24px; padding: 32px; text-align: center; max-width: 320px; width: 100%; box-shadow: 0 10px 25px rgba(0,0,0,0.2); animation: popIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);">
             <div style="font-size: 60px; margin-bottom: 15px;">🎉</div>
-            <h2 style="font-size: 22px; font-weight: 800; margin-bottom: 8px; color: #1a1a1a;">All Set!</h2>
-            <p style="color: #666; font-size: 15px; line-height: 1.5; margin-bottom: 24px;">Your booking was successful.</p>
+            <h2 style="font-size: 22px; font-weight: 800; margin-bottom: 8px; color: #1a1a1a;">{{ __('page.allSet') }}!</h2>
+            <p style="color: #666; font-size: 15px; line-height: 1.5; margin-bottom: 24px;">{{ __('page.bookingSuccess') }}</p>
             
             <button onclick="document.getElementById('success-modal').style.display='none'" 
                     style="width: 100%; background: #1a1a1a; color: #fff; border: none; padding: 14px; border-radius: 12px; font-weight: 700; cursor: pointer;">
-                Awesome!
+                {{ __('page.awesome') }}!
             </button>
         </div>
     </div>

@@ -1,6 +1,6 @@
 @extends('layouts.admin_app')
 
-@section('title', 'Manage Members')
+@section('title', __('page.manageMembers') . ' | QuickClean')
 
 @push('styles')
 <style>
@@ -14,8 +14,8 @@
 
 @section('content')
 <div style="margin-bottom: 25px;">
-    <h2 style="font-weight: 800;">Platform Members</h2>
-    <p style="color: #64748b; font-size: 14px;">Total registered customers: {{ count($members) }}</p>
+    <h2 style="font-weight: 800;">{{ __('page.memberList') }}</h2>
+    <p style="color: #64748b; font-size: 14px;">{{ __('page.totalRegisteredCustomers') }}: {{ count($members) }}</p>
 </div>
 
 <div class="admin-section">
@@ -23,10 +23,10 @@
         <table class="admin-table">
             <thead>
                 <tr>
-                    <th>Member Name</th>
-                    <th>Email Address</th>
-                    <th>Joined Date</th>
-                    <th>Actions</th>
+                    <th>{{ __('page.memberName') }}</th>
+                    <th>{{ __('page.emailAddress') }}</th>
+                    <th>{{ __('page.joinedDate') }}</th>
+                    <th>{{ __('page.actions') }}</th>
                 </tr>
             </thead>
             <tbody>
@@ -42,9 +42,9 @@
                     <td>{{ \Carbon\Carbon::parse($member->created_at)->format('d M Y') }}</td>
                     <td>
                         <div style="display: flex; gap: 15px;">
-                            <a href="{{ route('admin.members.edit', $member->id) }}" style="color: #2563eb; text-decoration: none; font-weight: 600;">Edit</a>
+                            <a href="{{ route('admin.members.edit', $member->id) }}" style="color: #2563eb; text-decoration: none; font-weight: 600;">{{ __('page.edit') }}</a>
                             
-                            <button onclick="confirmDelete('{{ $member->id }}', '{{ $member->name }}')" style="color: #ef4444; background: none; border: none; cursor: pointer; font-weight: 600; padding: 0;">Delete</button>
+                            <button onclick="confirmDelete('{{ $member->id }}', '{{ $member->name }}')" style="color: #ef4444; background: none; border: none; cursor: pointer; font-weight: 600; padding: 0;">{{ __('page.delete') }}</button>
                             
                             <form id="delete-form-{{ $member->id }}" action="{{ route('admin.members.destroy', $member->id) }}" method="POST" style="display:none;">
                                 @csrf @method('DELETE')
@@ -60,7 +60,7 @@
 
 <script>
     function confirmDelete(id, name) {
-        if(confirm('Are you sure you want to delete ' + name + '? This will remove all their booking history.')) {
+        if(confirm('{{ __('page.confirmDeleteMember') }}')) {
             document.getElementById('delete-form-' + id).submit();
         }
     }

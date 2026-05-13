@@ -31,7 +31,12 @@ Route::get('/signup', function () {
 
 Route::post('/signup', [SupabaseLoginController::class, 'register']);
 
-
+Route::get('lang/{locale}', function ($locale) {
+    if (in_array($locale, ['en', 'zh', 'my'])) {
+        session(['my_app_locale' => $locale]);
+    }
+    return redirect()->back();
+});
 
 Route::middleware(['auth'])->group(function () {
     

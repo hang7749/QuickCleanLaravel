@@ -27,24 +27,30 @@ class AdminListController extends Controller
 
     public function store(Request $request)
     {
-        $request->validate([
-            'name' => 'required|string|max:255',
-            'email' => 'required|email|unique:users,email',
-            'password' => 'required|min:6',
-        ]);
+        try {    
 
-        DB::table('users')->insert([
-            'id' => (string) Str::uuid(),
-            'name' => $request->name,
-            'username' => $request->name ?? null, // Admins don't need usernames
-            'email' => $request->email,
-            'password' => Hash::make($request->password), // Securely hash password
-            'role' => 'admin',
-            'created_at' => now(),
-            'updated_at' => now(),
-        ]);
+            $request->validate([
+                'name' => 'required|string|max:255',
+                'email' => 'required|email|unique:users,email',
+                'password' => 'required|min:6',
+            ]);
 
-        return redirect()->route('admin.admins.index')->with('success', 'New admin account created.');
+            DB::table('users')->insert([
+                'id' => (string) Str::uuid(),
+                'name' => $request->name,
+                'username' => $request->name ?? null, // Admins don't need usernames
+                'email' => $request->email,
+                'password' => Hash::make($request->password), // Securely hash password
+                'role' => 'admin',
+                'created_at' => now(),
+                'updated_at' => now(),
+            ]);
+        } catch (\Exception $e) {
+            return redirect()->back()->with('error', __('page.registrationFailed') . ': ' .
+                $e->getMessage());
+        }
+
+        return redirect()->route('admin.admins.index')->with('success', __('page.adminCreatedSuccessfully'));
     }
 
 }

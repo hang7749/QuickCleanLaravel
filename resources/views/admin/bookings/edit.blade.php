@@ -1,10 +1,10 @@
 @extends('layouts.admin_app')
 
-@section('title', 'Edit Booking')
+@section('title', __('page.editBooking') . ' | QuickClean')
 
 @section('content')
 <div style="max-width: 600px; margin: 0 auto;">
-    <h2 style="margin-bottom: 20px;">Update Booking #{{ Str::limit($booking->id, 6) }}</h2>
+    <h2 style="margin-bottom: 20px;">{{ __('page.editBooking') }}</h2>
 
     <div class="admin-section">
         <form action="{{ route('admin.bookings.update', $booking->id) }}" method="POST">
@@ -12,17 +12,17 @@
             @method('PUT')
 
             <div style="margin-bottom: 20px;">
-                <label style="display: block; font-weight: 600; margin-bottom: 8px;">Service Status</label>
+                <label style="display: block; font-weight: 600; margin-bottom: 8px;">{{ __('page.status') }}</label>
                 <select name="status" class="admin-input" style="width: 100%; padding: 12px; border-radius: 8px; border: 1px solid #e2e8f0;">
-                    <option value="pending" {{ $booking->status == 'pending' ? 'selected' : '' }}>Pending</option>
-                    <option value="confirmed" {{ $booking->status == 'confirmed' ? 'selected' : '' }}>Confirmed</option>
-                    <option value="completed" {{ $booking->status == 'completed' ? 'selected' : '' }}>Completed</option>
-                    <option value="cancelled" {{ $booking->status == 'cancelled' ? 'selected' : '' }}>Cancelled</option>
+                    <option value="pending" {{ $booking->status == 'pending' ? 'selected' : '' }}>{{ __('page.pending') }}</option>
+                    <option value="confirmed" {{ $booking->status == 'confirmed' ? 'selected' : '' }}>{{ __('page.confirmed') }}</option>
+                    <option value="completed" {{ $booking->status == 'completed' ? 'selected' : '' }}>{{ __('page.completed') }}</option>
+                    <option value="cancelled" {{ $booking->status == 'cancelled' ? 'selected' : '' }}>{{ __('page.cancelled') }}</option>
                 </select>
             </div>
 
             <div style="margin-bottom: 20px;">
-                <label style="display: block; font-weight: 600; margin-bottom: 8px;">Assigned Provider</label>
+                <label style="display: block; font-weight: 600; margin-bottom: 8px;">{{ __('page.provider') }}</label>
                 <select name="provider_id" class="admin-input" style="width: 100%; padding: 12px; border-radius: 8px; border: 1px solid #e2e8f0;">
                     @foreach($providers as $provider)
                         <option value="{{ $provider->id }}" {{ $booking->provider_id == $provider->id ? 'selected' : '' }}>
@@ -34,9 +34,9 @@
 
             <div style="display: flex; gap: 10px;">
                 <button type="submit" style="background: #1e293b; color: white; border: none; padding: 12px 24px; border-radius: 8px; font-weight: 600; cursor: pointer;">
-                    Save Changes
+                    {{ __('page.save') }}
                 </button>
-                <a href="{{ route('admin.bookings.index') }}" style="background: #f1f5f9; color: #1e293b; padding: 12px 24px; border-radius: 8px; text-decoration: none; font-weight: 600;">Cancel</a>
+                <a href="{{ route('admin.bookings.index') }}" style="background: #f1f5f9; color: #1e293b; padding: 12px 24px; border-radius: 8px; text-decoration: none; font-weight: 600;">{{ __('page.cancel') }}</a>
             </div>
         </form>
     </div>

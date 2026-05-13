@@ -1,6 +1,6 @@
 @extends('layouts.admin_app')
 
-@section('title', 'Admin List')
+@section('title', __('page.manageAdmin') . ' | QuickClean')
 
 @push('styles')
 <style>
@@ -15,7 +15,7 @@
 
 @section('content')
 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px;">
-    <h2 style="font-weight: 800;">Administrator List</h2>
+    <h2 style="font-weight: 800;">{{ __('page.adminList') }}</h2>
     <a href="{{ route('admin.admins.create') }}" 
        style="background: #0f172a; color: #fff; padding: 10px 20px; border-radius: 8px; text-decoration: none; font-weight: 600;">+ Add New Admin</a>
 </div>
@@ -25,10 +25,8 @@
         <table class="admin-table">
             <thead>
                 <tr>
-                    <th>Admin Name</th>
-                    <th>Email</th>
-                    <th>Role</th>
-
+                    <th>{{ __('page.name') }}</th>
+                    <th>{{ __('page.email') }}</th>
                 </tr>
             </thead>
             <tbody>
@@ -41,8 +39,6 @@
                         </div>
                     </td>
                     <td>{{ $admin->email }}</td>
-                    <td><span style="text-transform: capitalize;">{{ $admin->role }}</span></td>
-                   
                 </tr>
                 @endforeach
             </tbody>
@@ -52,7 +48,7 @@
 
 <script>
     function confirmDelete(id, name) {
-        if(confirm('Are you sure you want to remove ' + name + ' as an admin?')) {
+        if(confirm({{ __('page.confirmDeleteAdmin') }})) {
             document.getElementById('delete-form-' + id).submit();
         }
     }

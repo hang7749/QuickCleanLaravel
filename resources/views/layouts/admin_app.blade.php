@@ -92,6 +92,73 @@
             z-index: 999;
         }
 
+        /* Language Dropdown Styles */
+        .lang-dropdown {
+            position: relative;
+            display: inline-block;
+        }
+
+        .lang-btn {
+            background: none;
+            border: none;
+            color: #64748b; /* Matching your username color */
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            padding: 8px 4px;
+            display: flex;
+            align-items: center;
+        }
+
+        .lang-btn:hover {
+            color: #1a73e8;
+        }
+
+        /* Add this to your existing CSS */
+
+        .lang-content {
+            display: none;
+            position: absolute;
+            right: 0;
+            background-color: #ffffff;
+            min-width: 120px;
+            box-shadow: 0px 4px 12px rgba(0,0,0,0.1);
+            border: 1px solid #e8eaed;
+            border-radius: 6px;
+            z-index: 1000;
+            margin-top: 2px; /* Reduced gap */
+        }
+
+        /* This is the "Invisible Bridge" */
+        .lang-content::before {
+            content: "";
+            position: absolute;
+            top: -10px; /* Bridges the gap to the button */
+            left: 0;
+            right: 0;
+            height: 10px;
+            background: transparent;
+        }
+
+        /* Ensure the menu stays open when hovering the bridge */
+        .lang-dropdown:hover .lang-content {
+            display: block;
+        }
+
+        .lang-content a {
+            color: #334155;
+            padding: 10px 14px;
+            text-decoration: none;
+            display: block;
+            font-size: 13px;
+            transition: background 0.2s;
+        }
+
+        .lang-content a:hover {
+            background-color: #f8fafc;
+            color: #1a73e8;
+        }
+
         /* Alert Containers */
         .alert-success, .alert-error {
             display: flex;
@@ -173,42 +240,58 @@
     <aside class="sidebar" id="sidebar">
         <img src="{{ asset('quick_clean.png') }}" style="width: 250px;">
         <div class="sidebar-brand">
-   
-            Admin Panel
+            {{ __('page.adminPanel') }}
         </div>
 
         <nav>
-            <a href="{{ route('admin.home') }}" class="nav-link {{ request()->routeIs('admin.home') ? 'active' : '' }}">🏠 Dashboard</a>
-            <a href="{{ route('admin.bookings.index') }}" class="nav-link {{ request()->routeIs('admin.bookings.*') ? 'active' : '' }}">📅 Bookings</a>
-            <a href="{{ route('admin.services.index') }}" class="nav-link {{ request()->routeIs('admin.services.*') ? 'active' : '' }}">🛠️ Services</a>
-            <a href="{{ route('admin.providers.index') }}" class="nav-link {{ request()->routeIs('admin.providers.*') ? 'active' : '' }}">👤 Providers</a>
-            <a href="{{ route('admin.members.index') }}" class="nav-link {{ request()->routeIs('admin.members.*') ? 'active' : '' }}">👥 Members</a>
+            <a href="{{ route('admin.home') }}" class="nav-link {{ request()->routeIs('admin.home') ? 'active' : '' }}">🏠 {{ __('page.dashboard') }}</a>
+            <a href="{{ route('admin.bookings.index') }}" class="nav-link {{ request()->routeIs('admin.bookings.*') ? 'active' : '' }}">📅 {{ __('page.manageBookings') }}</a>
+            <a href="{{ route('admin.services.index') }}" class="nav-link {{ request()->routeIs('admin.services.*') ? 'active' : '' }}">🛠️ {{ __('page.manageServices') }}</a>
+            <a href="{{ route('admin.providers.index') }}" class="nav-link {{ request()->routeIs('admin.providers.*') ? 'active' : '' }}">👤 {{ __('page.manageServiceProviders') }}</a>
+            <a href="{{ route('admin.members.index') }}" class="nav-link {{ request()->routeIs('admin.members.*') ? 'active' : '' }}">👥 {{ __('page.manageMembers') }}</a>
             <hr style="border: 0; border-top: 1px solid #1e293b; margin: 15px 20px;">
-            <a href="{{ route('admin.admins.index') }}" class="nav-link">🔐 Admins</a>
+            <a href="{{ route('admin.admins.index') }}" class="nav-link">🔐 {{ __('page.manageAdmin') }}</a>
         </nav>
     </aside>
 
     <main class="main-content">
-        <header class="topbar">
-            <button class="menu-toggle" onclick="toggleMenu()">☰</button>
+    <header class="topbar">
+        <button class="menu-toggle" onclick="toggleMenu()">☰</button>
 
-            <div></div> 
+        <div></div> 
 
-            <div style="display: flex; align-items: center; gap: 12px; margin-left: auto;">
-                {{-- <span style="font-size: 14px; font-weight: 600; color: #64748b;">{{ auth()->user()->username }}</span> --}}
-                <form action="{{ route('logout') }}" method="POST" style="margin: 0;">
-                    @csrf
-                    <button type="submit" class="btn-logout">Logout</button>
-                </form>
+        <!-- Right Side Container -->
+        <div style="display: flex; align-items: center; gap: 16px; margin-left: auto;">
+            
+            <!-- Language Dropdown -->
+            <div class="lang-dropdown">
+                <button class="lang-btn">
+                    🌐 {{ strtoupper(app()->getLocale()) }}
+                </button>
+                <div class="lang-content">
+                    <a href="{{ url('lang/en') }}">English</a>
+                    <a href="{{ url('lang/zh') }}">中文</a>
+                    <a href="{{ url('lang/my') }}">Melayu</a>
+                </div>
             </div>
-        </header>
+
+            <!-- Vertical Separator (Optional) -->
+            <div style="width: 1px; height: 20px; background: #e8eaed;"></div>
+
+            <!-- Logout Form -->
+            <form action="{{ route('logout') }}" method="POST" style="margin: 0;">
+                @csrf
+                <button type="submit" class="btn-logout">{{ __('page.logout') }}</button>
+            </form>
+        </div>
+    </header>
         <div class="content-body">
             {{-- Success Alert --}}
             @if (session('success'))
                 <div id="success-alert" class="alert-success">
                     <span class="alert-icon">✅</span>
                     <div class="alert-content">
-                        <strong>Success!</strong>
+                        <strong>{{ __('page.success') }}!</strong>
                         <p>{{ session('success') }}</p>
                     </div>
                     <button class="alert-close" onclick="this.parentElement.style.display='none'">&times;</button>
@@ -220,7 +303,7 @@
                 <div class="alert-error">
                     <span class="alert-icon">⚠️</span>
                     <div class="alert-content">
-                        <strong>Error!</strong>
+                        <strong>{{ __('page.error') }}!</strong>
                         <p>{{ session('error') }}</p>
                     </div>
                 </div>

@@ -1,6 +1,6 @@
 @extends('layouts.admin_app')
 
-@section('title', 'Manage Bookings')
+@section('title', __('page.manageBookings') . ' | QuickClean')
 @push('styles')
 <style>
     /* Section Container */
@@ -76,7 +76,7 @@
 @endpush
 @section('content')
 <div class="section-header" style="margin-bottom: 20px; display: flex; justify-content: space-between; align-items: center;">
-    <h2 style="font-size: 24px; font-weight: 800;">All Bookings</h2>
+    <h2 style="font-size: 24px; font-weight: 800;">{{ __('page.manageBookings') }}</h2>
 </div>
 
 <div class="admin-section">
@@ -84,13 +84,13 @@
         <table class="admin-table">
             <thead>
                 <tr>
-                    <th>Date</th>
-                    <th>Service</th>
-                    <th>Provider</th>
-                    <th>Schedule</th>
-                    <th>Total</th>
-                    <th>Status</th>
-                    <th>Actions</th>
+                    <th>{{ __('page.date') }}</th>
+                    <th>{{ __('page.service') }}</th>
+                    <th>{{ __('page.provider') }}</th>
+                    <th>{{ __('page.schedule') }}</th>
+                    <th>{{ __('page.total') }}</th>
+                    <th>{{ __('page.status') }}</th>
+                    <th>{{ __('page.actions') }}</th>
                 </tr>
             </thead>
             <tbody>
@@ -107,7 +107,7 @@
                         </span>
                     </td>
                     <td>
-                        <a href="{{ route('admin.bookings.edit', $booking->id) }}" style="color: #2563eb; font-weight: 600; text-decoration: none; font-size: 13px;">Edit</a>
+                        <a href="{{ route('admin.bookings.edit', $booking->id) }}" style="color: #2563eb; font-weight: 600; text-decoration: none; font-size: 13px;">{{ __('page.edit') }}  </a>
                     </td>
                 </tr>
                 @endforeach

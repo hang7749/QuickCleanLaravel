@@ -29,12 +29,16 @@ class AdminBookingController extends Controller
 
     public function update(Request $request, String $id)
     {
-        DB::table('bookings')->where('id', $id)->update([
-            'status' => $request->status,
-            'provider_id' => $request->provider_id,
-            'updated_at' => now(),
-        ]);
+        try {
+            DB::table('bookings')->where('id', $id)->update([
+                'status' => $request->status,
+                'provider_id' => $request->provider_id,
+                'updated_at' => now(),
+            ]);
+        } catch (\Exception $e) {
+            return redirect()->back()->with('error', __('page.bookingUpdateFailed') . ': ' . $e->getMessage());
+        }
 
-        return redirect()->route('admin.bookings.index')->with('success', 'Booking updated successfully');
+        return redirect()->route('admin.bookings.index')->with('success', __('page.bookingUpdated'));
     }
 }

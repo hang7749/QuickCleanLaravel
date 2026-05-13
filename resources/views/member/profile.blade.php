@@ -1,7 +1,7 @@
 {{-- resources/views/profile.blade.php --}}
 @extends('layouts.member_app')
 
-@section('title', 'Profile Details')
+@section('title', 'QuickClean - ' . __('page.viewProfile'))
 
 @push('styles')
 <style>
@@ -205,7 +205,7 @@
 
 <header class="topbar">
    <a href="{{ url('/home') }}" class="back-btn" style="text-decoration: none; display: inline-block;">&#8592;</a>
-    <h1>Profile Details</h1>
+    <h1>{{ __('page.viewProfile') }}</h1>
 </header>
 
 <main class="page-body">
@@ -252,7 +252,7 @@
 
         {{-- Save Button --}}
         <button type="button" class="save-btn" id="save-btn" onclick="saveProfile()">
-            <span class="btn-text">Save Changes</span>
+            <span class="btn-text">{{ __('page.saveChanges') }}</span>
             <span class="spinner"></span>
         </button>
     </form>
@@ -263,8 +263,8 @@
     <div class="list-tile" onclick="document.getElementById('password-sheet').classList.add('show')">
         <span class="tile-icon" style="color:#1a73e8;">🔒</span>
         <div class="tile-text">
-            <h3>Change Password</h3>
-            <p>Update your account security</p>
+            <h3>{{ __('page.changePassword') }}</h3>
+            <p>{{ __('page.updateAccountSecurity') }}</p>
         </div>
         <span class="tile-arrow">›</span>
     </div>
@@ -273,8 +273,8 @@
     <div class="list-tile" onclick="document.getElementById('logout-dialog').classList.add('show')">
         <span class="tile-icon" style="color:#ef4444;">🚪</span>
         <div class="tile-text">
-            <h3>Logout</h3>
-            <p>Sign out of your account</p>
+            <h3>{{ __('page.logout') }}</h3>
+            <p>{{ __('page.logoutP') }}</p>
         </div>
         <span class="tile-arrow">›</span>
     </div>
@@ -285,20 +285,20 @@
 <div class="sheet-overlay" id="password-sheet" onclick="closeSheet(event)">
     <div class="sheet-box">
         <button class="sheet-close" onclick="document.getElementById('password-sheet').classList.remove('show')">✕</button>
-        <h2>Change Password</h2>
+        <h2>{{ __('page.changePassword') }}</h2>
 
         <form method="POST" action="{{ route('profile.password') }}" id="password-form">
             @csrf
             @method('PUT')
             <div class="field-group">
-                <label>New Password</label>
+                <label>{{ __('page.newPassword') }}</label>
                 <div class="input-wrap">
                     <span class="icon">🔑</span>
                     <input type="password" name="password" id="password-input"
-                           placeholder="Min. 6 characters" minlength="6" required>
+                           placeholder="{{ __('page.newPassword') }}" minlength="6" required>
                 </div>
             </div>
-            <button type="submit" class="sheet-btn">Update Password</button>
+            <button type="submit" class="sheet-btn">{{ __('page.updatePassword') }}</button>
         </form>
     </div>
 </div>
@@ -306,13 +306,13 @@
 {{-- Logout Confirmation Dialog --}}
 <div class="dialog-overlay" id="logout-dialog">
     <div class="dialog-box">
-        <h2>Logout</h2>
-        <p>Are you sure you want to leave?</p>
+        <h2>{{ __('page.logout') }}</h2>
+        <p>{{ __('page.logoutConfirmation') }}</p>
         <div class="dialog-actions">
-            <button class="btn-cancel" onclick="document.getElementById('logout-dialog').classList.remove('show')">Cancel</button>
+            <button class="btn-cancel" onclick="document.getElementById('logout-dialog').classList.remove('show')">{{ __('page.cancel') }}</button>
             <form method="POST" action="{{ route('logout') }}" style="display:inline">
                 @csrf
-                <button type="submit" class="btn-logout">Logout</button>
+                <button type="submit" class="btn-logout">{{ __('page.logout') }}</button>
             </form>
         </div>
     </div>

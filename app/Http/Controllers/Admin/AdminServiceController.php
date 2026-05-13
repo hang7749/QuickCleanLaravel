@@ -30,18 +30,21 @@ class AdminServiceController extends Controller
         ]);
 
         $imageUrl = $request->image_url ?? 'https://via.placeholder.com/150';
+        try {
+            DB::table('services')->insert([
+                'id' => (string) \Illuminate\Support\Str::uuid(),
+                'name' => $request->name,
+                'price' => $request->price,
+                'description' => $request->description,
+                'image_url' => $imageUrl,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ]);
+        } catch (\Exception $e) {
+            return redirect()->back()->with('error', __('page.serviceAddFailed') . ': ' . $e->getMessage());
+        }
 
-        DB::table('services')->insert([
-            'id' => (string) \Illuminate\Support\Str::uuid(),
-            'name' => $request->name,
-            'price' => $request->price,
-            'description' => $request->description,
-            'image_url' => $imageUrl,
-            'created_at' => now(),
-            'updated_at' => now(),
-        ]);
-
-        return redirect()->route('admin.services.index')->with('success', 'Service added!');
+        return redirect()->route('admin.services.index')->with('success', __('page.newServiceProvider'));
     }
 
     public function update(Request $request, String $id)
@@ -52,15 +55,19 @@ class AdminServiceController extends Controller
             'image_url' => 'nullable|url'
         ]);
 
-        DB::table('services')->where('id', $id)->update([
-            'name' => $request->name,
-            'price' => $request->price,
-            'description' => $request->description,
-            'image_url' => $request->image_url, // Added this
-            'updated_at' => now(),
-        ]);
+        try {
+            DB::table('services')->where('id', $id)->update([
+                'name' => $request->name,
+                'price' => $request->price,
+                'description' => $request->description,
+                'image_url' => $request->image_url, // Added this
+                'updated_at' => now(),
+            ]);
+        } catch (\Exception $e) {
+            return redirect()->back()->with('error', __('page.serviceUpdateFailed') . ': ' . $e->getMessage());
+        }
 
-        return redirect()->route('admin.services.index')->with('success', 'Service updated!');
+        return redirect()->route('admin.services.index')->with('success', __('page.serviceUpdated'));
     }
 
     public function edit(String $id)
@@ -73,9 +80,9 @@ class AdminServiceController extends Controller
     {
         try {
             DB::table('services')->where('id', $id)->delete();
-            return redirect()->route('admin.services.index')->with('success', 'Service deleted successfully!');
+            return redirect()->route('admin.services.index')->with('success', __('page.serviceDeleted'));
         } catch (\Exception $e) {
-            return redirect()->route('admin.services.index')->with('error', 'Cannot delete service. It might be linked to active bookings.');
+            return redirect()->route('admin.services.index')->with('error', __('page.serviceDeleteFailed') . ': ' . $e->getMessage());
         }
     }
 

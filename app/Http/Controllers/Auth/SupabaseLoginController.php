@@ -28,7 +28,7 @@ class SupabaseLoginController extends Controller
         ]);
 
         if ($response->failed()) {
-            return back()->withErrors(['email' => 'Invalid credentials from Supabase.']);
+            return back()->withErrors(['email' => __('page.loginFailed')]);
         }
 
         $supabaseUser = $response->json()['user'];
@@ -71,7 +71,7 @@ class SupabaseLoginController extends Controller
         ]);
 
         if ($response->failed()) {
-            $error = $response->json()['msg'] ?? 'Registration failed.';
+            $error = $response->json()['msg'] ?? __('page.registrationFailed');
             return back()->withErrors(['email' => $error]);
         }
 
@@ -83,11 +83,11 @@ class SupabaseLoginController extends Controller
             
             if ($user) {
                 Auth::login($user);
-                return redirect('/home')->with('success', 'Welcome, ' . $user->username . '!');
+                return redirect('/home')->with('success', __('page.welcomeBack', ['name' => $user->username]));
             }
         }
 
-        return redirect('/')->with('success', 'Account created successfully!');
+        return redirect('/')->with('success', __('page.registrationSuccess'));
     }
 
     public function adminLogin(Request $request)
@@ -107,14 +107,14 @@ class SupabaseLoginController extends Controller
         ]);
 
         if ($response->failed()) {
-            return back()->withErrors(['email' => 'Invalid admin credentials.']);
+            return back()->withErrors(['email' => __('page.loginFailed')]);
         }
 
         // 2. Check Role in local database
         $user = User::where('email', $credentials['email'])->first();
 
         if (!$user || $user->role !== 'admin') {
-            return back()->withErrors(['email' => 'Access Denied: You are not an administrator.']);
+            return back()->withErrors(['email' => __('page.loginFailed')]);
         }
 
         // 3. Log in to Laravel session

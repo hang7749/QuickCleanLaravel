@@ -1,7 +1,7 @@
 {{-- resources/views/payment.blade.php --}}
 @extends('layouts.member_app')
 
-@section('title', 'Payment')
+@section('title', "QuickClean - " . __('page.payment'))
 
 @push('styles')
 <style>
@@ -184,33 +184,33 @@
 
 <header class="topbar">
     <button class="back-btn" onclick="history.back()">&#8592;</button>
-    <h1>Payment</h1>
+    <h1>{{ __('page.payment') }}</h1>
 </header>
 
 <main class="page-body">
 
     {{-- Booking Summary Card --}}
     <div class="summary-card">
-        <div class="card-header">Booking Summary</div>
+        <div class="card-header">{{ __('page.orderSummary') }}</div>
         <div class="card-body">
             <div class="summary-row">
-                <span class="label">Service</span>
+                <span class="label">{{ __('page.service') }}</span>
                 <span class="value">{{ $bookingData['service_type'] }}</span>
             </div>
             <div class="summary-row">
-                <span class="label">Date</span>
+                <span class="label">{{ __('page.date') }}</span>
                 <span class="value">{{ \Carbon\Carbon::parse($bookingData['booking_date'])->format('d M Y') }}</span>
             </div>
             <div class="summary-row">
-                <span class="label">Time</span>
+                <span class="label">{{ __('page.time') }}</span>
                 <span class="value">{{ $bookingData['booking_time'] }}</span>
             </div>
             <div class="summary-row">
-                <span class="label">Status</span>
-                <span class="value"><span class="status-badge">Pending</span></span>
+                <span class="label">{{ __('page.status') }}</span>
+                <span class="value"><span class="status-badge">{{ __('page.pending') }}</span></span>
             </div>
             <div class="summary-row total">
-                <span class="label">Total Amount</span>
+                <span class="label">{{ __('page.totalAmount') }}</span>
                 <span class="value">RM {{ number_format($bookingData['total_price'], 2) }}</span>
             </div>
         </div>
@@ -231,7 +231,7 @@
         <input type="hidden" name="provider_id"   value="{{ $bookingData['provider_id'] }}">
 
         <button type="button" class="pay-btn" id="pay-btn" onclick="processPayment()">
-            <span class="btn-text">Pay Now &amp; Confirm</span>
+            <span class="btn-text">{{ __('page.checkout') }}</span>
             <span class="spinner"></span>
         </button>
     </form>
@@ -243,9 +243,9 @@
 <div class="modal-overlay show" id="success-modal">
     <div class="modal-box">
         <div class="check-icon">✅</div>
-        <h2>Payment Successful!</h2>
-        <p>Your booking is now confirmed.<br>We'll see you on the scheduled date.</p>
-        <a href="{{ route('home') }}" class="home-btn">Back to Home</a>
+        <h2>{{ __('page.paymentSuccessful') }}</h2>
+        <p>{{ __('page.bookingConfirmed') }}</p>
+        <a href="{{ route('home') }}" class="home-btn">{{ __('page.backToHome') }}</a>
     </div>
 </div>
 @endif

@@ -1,6 +1,6 @@
 @extends('layouts.admin_app')
 
-@section('title', 'Service Providers')
+@section('title', __('page.serviceProviders') . ' | QuickClean')
 
 @push('styles')
 <style>
@@ -14,9 +14,9 @@
 
 @section('content')
 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px;">
-    <h2 style="font-weight: 800;">Service Providers</h2>
+    <h2 style="font-weight: 800;">{{ __('page.serviceProviders') }}</h2>
     <a href="{{ route('admin.providers.create') }}" 
-       style="background: #2563eb; color: #fff; padding: 10px 20px; border-radius: 8px; text-decoration: none; font-weight: 600;">+ Add Provider</a>
+       style="background: #2563eb; color: #fff; padding: 10px 20px; border-radius: 8px; text-decoration: none; font-weight: 600;">+ {{ __('page.newServiceProvider') }}</a>
 </div>
 
 <div class="admin-section">
@@ -24,11 +24,11 @@
         <table class="admin-table">
             <thead>
                 <tr>
-                    <th>Provider</th>
-                    <th>Specialty</th>
-                    <th>Phone</th>
-                    <th>Status</th>
-                    <th>Actions</th>
+                    <th>{{ __('page.provider') }}</th>
+                    <th>{{ __('page.specialty') }}</th>
+                    <th>{{ __('page.phone') }}</th>
+                    <th>{{ __('page.status') }}</th>
+                    <th>{{ __('page.actions') }}</th>
                 </tr>
             </thead>
             <tbody>
@@ -45,14 +45,14 @@
                     <td>{{ $p->phone ?? 'N/A' }}</td>
                     <td>
                         @if($p->is_available)
-                            <span style="color: #059669; font-size: 13px;">● Available</span>
+                            <span style="color: #059669; font-size: 13px;">● {{ __('page.available') }}</span>
                         @else
-                            <span style="color: #ef4444; font-size: 13px;">● Offline</span>
+                            <span style="color: #ef4444; font-size: 13px;">● {{ __('page.notAvailable') }}</span>
                         @endif
                     </td>
                     <td>
-                        <a href="{{ route('admin.providers.edit', $p->id) }}" style="color: #2563eb; text-decoration: none; font-weight: 600; margin-right: 10px;">Edit</a>
-                        <button onclick="confirmDelete('{{ $p->id }}', '{{ $p->name }}')" style="color: #ef4444; background: none; border: none; cursor: pointer; font-weight: 600;">Delete</button>
+                        <a href="{{ route('admin.providers.edit', $p->id) }}" style="color: #2563eb; text-decoration: none; font-weight: 600; margin-right: 10px;">{{ __('page.edit') }}</a>
+                        <button onclick="confirmDelete('{{ $p->id }}', '{{ $p->name }}')" style="color: #ef4444; background: none; border: none; cursor: pointer; font-weight: 600;">{{ __('page.delete') }}</button>
                         <form id="delete-form-{{ $p->id }}" action="{{ route('admin.providers.destroy', $p->id) }}" method="POST" style="display:none;">
                             @csrf @method('DELETE')
                         </form>
@@ -66,7 +66,7 @@
 
 <script>
     function confirmDelete(id, name) {
-        if(confirm('Remove ' + name + ' from providers?')) {
+        if(confirm('{{ __('page.confirm') }}: {{ __('page.delete') }} ' + name + '?')) {
             document.getElementById('delete-form-' + id).submit();
         }
     }

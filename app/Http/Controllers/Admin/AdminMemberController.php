@@ -32,20 +32,24 @@ class AdminMemberController extends Controller
             'username' => 'nullable|string|max:50|unique:users,username,' . $id, // Unique except for this user
             'email' => 'required|email|unique:users,email,' . $id,
         ]);
+        
+        try {
+            DB::table('users')->where('id', $id)->update([
+                'name' => $request->name,
+                'username' => $request->username,
+                'email' => $request->email,
+                'updated_at' => now(),
+            ]);
+            } catch (\Exception $e) {
+                return redirect()->back()->with('error', __('page.memberUpdateFailed') . ': ' . $e->getMessage());
+        }
 
-        DB::table('users')->where('id', $id)->update([
-            'name' => $request->name,
-            'username' => $request->username,
-            'email' => $request->email,
-            'updated_at' => now(),
-        ]);
-
-        return redirect()->route('admin.members.index')->with('success', 'Member profile updated.');
+        return redirect()->route('admin.members.index')->with('success', __('page.memberUpdated'));
     }
     
     public function destroy(String $id)
     {
         DB::table('users')->where('id', $id)->delete();
-        return redirect()->route('admin.members.index')->with('success', 'Member account deleted.');
+        return redirect()->route('admin.members.index')->with('success', __('page.memberDeleted'));
     }
 }

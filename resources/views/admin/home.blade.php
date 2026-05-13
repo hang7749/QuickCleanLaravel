@@ -1,6 +1,6 @@
 @extends('layouts.admin_app')
 
-@section('title', 'Admin Dashboard')
+@section('title', __('page.adminPanel') . ' | QuickClean')
 
 @push('styles')
 <style>
@@ -59,43 +59,43 @@
     }
     .status-confirmed { background: #dcfce7; color: #166534; }
     .status-pending { background: #fff8e1; color: #b45309; }
+    .status-cancelled { background: #fee2e2; color: #b91c1c; }
 </style>
 @endpush
 
 @section('content')
     <div class="container-fluid">
-        <h2 style="margin-bottom: 25px;">Dashboard Overview</h2>
+        <h2 style="margin-bottom: 25px;">{{ __('page.dashboard') }}</h2>
 
         <div class="dashboard-grid">
             <div class="stat-card">
-                <span class="label">TOTAL BOOKINGS</span>
+                <span class="label">{{ __('page.totalBookings') }}</span>
                 <span class="value">{{ $stats['total_bookings'] }}</span>
-                <span class="trend">Live Data</span>
             </div>
             <div class="stat-card">
-                <span class="label">ACTIVE MEMBERS</span>
+                <span class="label">{{ __('page.activeMembers') }}</span>
                 <span class="value">{{ $stats['active_members'] }}</span>
             </div>
             <div class="stat-card">
-                <span class="label">SERVICE PROVIDERS</span>
+                <span class="label">{{ __('page.serviceProviders') }}</span>
                 <span class="value">{{ $stats['total_providers'] }}</span>
             </div>
         </div>
 
         <div class="admin-section">
             <div class="section-header">
-                <h3 style="font-size: 18px; font-weight: 700;">Recent Bookings</h3>
-                <a href="{{ route('admin.bookings.index') }}" style="color: #2563eb; text-decoration: none; font-size: 14px; font-weight: 600;">View All</a>
+                <h3 style="font-size: 18px; font-weight: 700;">{{ __('page.recentBookings') }}</h3>
+                <a href="{{ route('admin.bookings.index') }}" style="color: #2563eb; text-decoration: none; font-size: 14px; font-weight: 600;">{{ __('page.viewAll') }}</a>
             </div>
             <div class="table-responsive">
                 <table class="admin-table">
                     <thead>
                         <tr>
-                            <th>Service</th>
-                            <th>Provider</th>
-                            <th>Date/Time</th>
-                            {{-- <th>Price</th> --}}
-                            <th>Status</th>
+                            <th>{{ __('page.service') }}</th>
+                            <th>{{ __('page.provider') }}</th>
+                            <th>{{ __('page.dateTime') }}</th>
+                            {{-- <th>{{ __('page.price') }}</th> --}}
+                            <th>{{ __('page.status') }}</th>
                         </tr>
                     </thead>
                     <tbody>

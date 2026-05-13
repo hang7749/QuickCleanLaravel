@@ -48,13 +48,13 @@ class BookingController extends Controller
                 ]);
 
             if ($updated) {
-                return back()->with('success', 'Booking cancelled successfully.');
+                return back()->with('success', __('page.bookingCancelled'));
             }
 
-            return back()->with('error', 'Booking not found or already processed.');
+            return back()->with('error', __('page.bookingCancelError'));
             
         } catch (\Exception $e) {
-            return back()->with('error', 'Failed to cancel booking.');
+            return back()->with('error', __('page.bookingCancelError') . ' ' . $e->getMessage());
         }
     }
     
@@ -149,7 +149,7 @@ class BookingController extends Controller
 
         } catch (\Exception $e) {
             dd('hey', $e->getMessage());
-            return back()->with('error', 'Payment failed: ' . $e->getMessage());
+            return back()->with('error', __('page.bookingSaveError') . ' ' . $e->getMessage());
         }
     }
 

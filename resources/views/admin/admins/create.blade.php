@@ -1,6 +1,6 @@
 @extends('layouts.admin_app')
 
-@section('title', 'Create Admin')
+@section('title', __('page.createAdminAccount') . ' | QuickClean')
 
 @push('styles')
 <style>
@@ -15,30 +15,30 @@
 
 @section('content')
 <div style="max-width: 500px; margin: 0 auto;">
-    <h2 style="margin-bottom: 20px;">Create Admin Account</h2>
+    <h2 style="margin-bottom: 20px;">{{ __('page.createAdmin') }}</h2>
     
     <div class="admin-section">
         <form action="{{ route('admin.admins.store') }}" method="POST">
             @csrf
             <div style="margin-bottom: 15px;">
-                <label style="display: block; font-weight: 600; margin-bottom: 5px;">Full Name</label>
+                <label style="display: block; font-weight: 600; margin-bottom: 5px;">{{ __('page.fullName') }}</label>
                 <input type="text" name="name" required style="width: 100%; padding: 12px; border: 1px solid #e2e8f0; border-radius: 8px;">
             </div>
 
             <div style="margin-bottom: 15px;">
-                <label style="display: block; font-weight: 600; margin-bottom: 5px;">Email Address</label>
+                <label style="display: block; font-weight: 600; margin-bottom: 5px;">{{ __('page.email') }}</label>
                 <input type="email" name="email" required style="width: 100%; padding: 12px; border: 1px solid #e2e8f0; border-radius: 8px;">
             </div>
 
             <div style="margin-bottom: 20px;">
-                <label style="display: block; font-weight: 600; margin-bottom: 5px;">Initial Password</label>
+                <label style="display: block; font-weight: 600; margin-bottom: 5px;">{{ __('page.passwordLabel') }}</label>
                 <input type="password" name="password" required placeholder="Min 6 characters" 
                        style="width: 100%; padding: 12px; border: 1px solid #e2e8f0; border-radius: 8px;">
             </div>
 
             <div style="display: flex; gap: 10px;">
-                <button type="submit" style="flex: 1; background: #0f172a; color: white; border: none; padding: 12px; border-radius: 8px; font-weight: 600; cursor: pointer;">Create Admin</button>
-                <a href="{{ route('admin.admins.index') }}" style="flex: 1; text-align: center; background: #f1f5f9; color: #1e293b; padding: 12px; border-radius: 8px; text-decoration: none; font-weight: 600;">Cancel</a>
+                <button type="submit" style="flex: 1; background: #0f172a; color: white; border: none; padding: 12px; border-radius: 8px; font-weight: 600; cursor: pointer;">{{ __('page.createAdmin') }}</button>
+                <a href="{{ route('admin.admins.index') }}" style="flex: 1; text-align: center; background: #f1f5f9; color: #1e293b; padding: 12px; border-radius: 8px; text-decoration: none; font-weight: 600;">{{ __('page.cancel') }}</a>
             </div>
         </form>
     </div>

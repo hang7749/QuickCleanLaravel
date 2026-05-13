@@ -1,6 +1,6 @@
 @extends('layouts.admin_app')
 
-@section('title', 'Edit Member')
+@section('title', __('page.editMember') . ' | QuickClean')
 
 @push('styles')
 <style>
@@ -14,7 +14,7 @@
 
 @section('content')
 <div style="max-width: 600px; margin: 0 auto;">
-    <h2 style="margin-bottom: 20px;">Edit Member Profile</h2>
+    <h2 style="margin-bottom: 20px;">{{ __('page.editMember') }}</h2>
 
     <div class="admin-section">
         <form action="{{ route('admin.members.update', $member->id) }}" method="POST">
@@ -22,18 +22,18 @@
             @method('PUT')
 
             <div style="margin-bottom: 15px;">
-                <label style="display: block; font-weight: 600; margin-bottom: 5px;">Full Name</label>
+                <label style="display: block; font-weight: 600; margin-bottom: 5px;">{{ __('page.fullName') }}</label>
                 <input type="text" name="name" value="{{ $member->name }}" required style="width: 100%; padding: 12px; border: 1px solid #e2e8f0; border-radius: 8px;">
             </div>
 
             <div style="margin-bottom: 20px;">
-                <label style="display: block; font-weight: 600; margin-bottom: 5px;">Email Address</label>
+                <label style="display: block; font-weight: 600; margin-bottom: 5px;">{{ __('page.email') }}</label>
                 <input type="email" name="email" value="{{ $member->email }}" required style="width: 100%; padding: 12px; border: 1px solid #e2e8f0; border-radius: 8px;">
             </div>
 
             <div style="display: flex; gap: 10px;">
-                <button type="submit" style="background: #2563eb; color: white; border: none; padding: 12px 24px; border-radius: 8px; font-weight: 600; cursor: pointer;">Update Member</button>
-                <a href="{{ route('admin.members.index') }}" style="background: #f1f5f9; color: #1e293b; padding: 12px 24px; border-radius: 8px; text-decoration: none; font-weight: 600;">Cancel</a>
+                <button type="submit" style="background: #2563eb; color: white; border: none; padding: 12px 24px; border-radius: 8px; font-weight: 600; cursor: pointer;">{{ __('page.update') }}</button>
+                <a href="{{ route('admin.members.index') }}" style="background: #f1f5f9; color: #1e293b; padding: 12px 24px; border-radius: 8px; text-decoration: none; font-weight: 600;">{{ __('page.cancel') }}</a>
             </div>
         </form>
     </div>

@@ -31,44 +31,57 @@ class AdminProviderController extends Controller
             'image_url' => 'nullable|url'
         ]);
 
-        DB::table('service_providers')->insert([
-            'id' => (string) Str::uuid(),
-            'name' => $request->name,
-            'specialty' => $request->specialty,
-            'phone' => $request->phone,
-            'image_url' => $request->image_url,
-            'is_available' => $request->has('is_available'),
-            'created_at' => now(),
-            'updated_at' => now(),
-        ]);
+        try {
+            DB::table('service_providers')->insert([
+                'id' => (string) Str::uuid(),
+                'name' => $request->name,
+                'specialty' => $request->specialty,
+                'phone' => $request->phone,
+                'image_url' => $request->image_url,
+                'is_available' => $request->has('is_available'),
+                'created_at' => now(),
+                'updated_at' => now(),
+            ]);
+        } catch (\Exception $e) {
+            return redirect()->back()->with('error', __('page.providerAddFailed') . ': ' . $e->getMessage());
+        }
 
-        return redirect()->route('admin.providers.index')->with('success', 'Provider added successfully!');
+        return redirect()->route('admin.providers.index')->with('success', __('page.newServiceProvider'));
     }
 
-    public function edit($id)
+    public function edit(String $id)
     {
         $provider = DB::table('service_providers')->where('id', $id)->first();
         $services = DB::table('services')->get();
         return view('admin.providers.edit', compact('provider', 'services'));
     }
 
-    public function update(Request $request, $id)
+    public function update(Request $request, String $id)
     {
-        DB::table('service_providers')->where('id', $id)->update([
-            'name' => $request->name,
-            'specialty' => $request->specialty,
-            'phone' => $request->phone,
-            'image_url' => $request->image_url,
-            'is_available' => $request->has('is_available'),
-            'updated_at' => now(),
-        ]);
+        try {
+            DB::table('service_providers')->where('id', $id)->update([
+                'name' => $request->name,
+                'specialty' => $request->specialty,
+                'phone' => $request->phone,
+                'image_url' => $request->image_url,
+                'is_available' => $request->has('is_available'),
+                'updated_at' => now(),
+            ]);
+        } catch (\Exception $e) {
+            return redirect()->back()->with('error', __('page.providerUpdateFailed') . ': ' . $e->getMessage());
+        }
 
-        return redirect()->route('admin.providers.index')->with('success', 'Provider updated!');
+        return redirect()->route('admin.providers.index')->with('success', __('page.providerUpdated'));
     }
 
-    public function destroy($id)
+    public function destroy(String $id)
     {
-        DB::table('service_providers')->where('id', $id)->delete();
-        return redirect()->route('admin.providers.index')->with('success', 'Provider removed.');
+        try {
+            DB::table('service_providers')->where('id', $id)->delete();
+        } catch (\Exception $e) {
+            return redirect()->back()->with('error', 'Error removing provider: ' . $e->getMessage());
+        }
+
+        return redirect()->route('admin.providers.index')->with('success', __('page.providerRemoved'));
     }
 }

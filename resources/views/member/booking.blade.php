@@ -1,7 +1,7 @@
 {{-- resources/views/booking.blade.php --}}
 @extends('layouts.member_app')
 
-@section('title', 'Book ' . $serviceName)
+@section('title', 'QuickClean - ' . __('page.book') . ' ' . $serviceName)
 
 @push('styles')
 <style>
@@ -176,19 +176,19 @@
     .confirm-btn:active { transform: scale(0.99); }
 </style>
 @endpush
-
+    
 @section('content')
 
 {{-- App Bar --}}
 <header class="topbar">
     <a href="{{ url('/home') }}" class="back-btn" style="text-decoration: none; display: inline-block;">&#8592;</a>
-    <h1>Book {{ $serviceName }}</h1>
+    <h1>{{ __('page.book') }} {{ $serviceName }}</h1>
 </header>
 
 <main class="page-body">
     {{-- Select Date --}}
     <div>
-        <p class="section-label">Select Date</p>
+        <p class="section-label">{{ __('page.selectDate') }}</p>
         <input type="date" id="date-input"
                min="{{ now()->addDay()->toDateString() }}"
                max="{{ now()->addDays(30)->toDateString() }}"
@@ -201,7 +201,7 @@
 
     {{-- Select Time --}}
     <div>
-        <p class="section-label">Select Time</p>
+        <p class="section-label">{{ __('page.selectTime') }}</p>
         <div class="time-slots">
             @php
                 $timeSlots = ['10:00 AM','11:00 AM','12:00 PM','1:00 PM','2:00 PM','3:00 PM','4:00 PM','5:00 PM'];
@@ -217,9 +217,9 @@
 
     {{-- Select Specialist --}}
     <div>
-        <p class="section-label">Select Specialist</p>
+        <p class="section-label">{{ __('page.selectSpecialist') }}</p>
         @if ($providers->isEmpty())
-            <p class="no-specialist">No specialists available for this service.</p>
+            <p class="no-specialist">{{ __('page.noSpecialist') }}</p>
         @else
             <div class="specialists-scroll">
                 @foreach ($providers as $provider)
@@ -239,16 +239,16 @@
 
     {{-- Price --}}
     <div>
-        <p class="section-label">Price</p>
+        <p class="section-label">{{ __('page.price') }}</p>
         <span class="price-badge">RM {{ number_format($service['price'], 2) }}</span>
     </div>
 
     {{-- Toast Alert --}}
-    <div class="toast" id="toast">Please select a specialist</div>
+    <div class="toast" id="toast">{{ __('page.selectSpecialist') }}</div>
 
     {{-- Confirm Button --}}
     <button type="button" class="confirm-btn" onclick="proceedToPayment()">
-        Confirm Booking
+        {{ __('page.confirmBooking') }}
     </button>
 
 </main>

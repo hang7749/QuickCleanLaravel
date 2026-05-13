@@ -45,6 +45,7 @@ class ProfileController extends Controller
         $request->validate([
             'password' => 'required|min:6',
         ]);
+        
 
         // Use the SERVICE_ROLE_KEY to act as an administrator
         $response = Http::withHeaders([
@@ -56,13 +57,13 @@ class ProfileController extends Controller
         ]);
 
         if ($response->successful()) {
-            return back()->with('success', 'Password updated successfully!');
+            return back()->with('success', __('page.passwordUpdated'));
         }
 
         // Log error for debugging
         Log::error('Supabase Password Update Failed: ' . $response->body());
 
-        return back()->with('error', 'Failed to update password: ' . ($response->json()['msg'] ?? 'Unknown error'));
+        return back()->with('error', __('page.passwordUpdateFailed'));
     }
 
     /**
