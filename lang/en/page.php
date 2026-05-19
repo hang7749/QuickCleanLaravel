@@ -152,6 +152,7 @@ return [
     'paymentFailed' => 'Payment failed: :e',
     'checkout' => 'Checkout',
     'orderSummary' => 'Order Summary',
+    'specialist' => 'Specialist',
     'service' => 'Service',
     'date' => 'Date',
     'time' => 'Time',

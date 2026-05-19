@@ -62,6 +62,16 @@
     .summary-row:last-child { border-bottom: none; }
     .summary-row .label { color: #777; }
     .summary-row .value { font-weight: 600; color: #1a1a1a; }
+    
+    /* Highlight the specialists count */
+    .summary-row .value.specialist-count {
+        color: #1a73e8;
+        background: rgba(26,115,232,0.08);
+        padding: 2px 10px;
+        border-radius: 12px;
+        font-size: 13px;
+    }
+
     .summary-row.total .label { font-size: 16px; font-weight: 700; color: #1a1a1a; }
     .summary-row.total .value { font-size: 20px; font-weight: 700; color: #1a73e8; }
 
@@ -198,6 +208,12 @@
                 <span class="value">{{ $bookingData['service_type'] }}</span>
             </div>
             <div class="summary-row">
+                <span class="label">{{ __('page.specialist') }}</span>
+                <span class="value specialist-count">
+                    {{ is_array($bookingData['provider_ids'] ?? null) ? count($bookingData['provider_ids']) : 1 }}x Selected
+                </span>
+            </div>
+            <div class="summary-row">
                 <span class="label">{{ __('page.date') }}</span>
                 <span class="value">{{ \Carbon\Carbon::parse($bookingData['booking_date'])->format('d M Y') }}</span>
             </div>
@@ -228,7 +244,31 @@
         <input type="hidden" name="booking_date"  value="{{ $bookingData['booking_date'] }}">
         <input type="hidden" name="booking_time"  value="{{ $bookingData['booking_time'] }}">
         <input type="hidden" name="total_price"   value="{{ $bookingData['total_price'] }}">
-        <input type="hidden" name="provider_id"   value="{{ $bookingData['provider_id'] }}">
+        
+        @if(is_array($bookingData['provider_ids'] ?? null))
+            @foreach($bookingData['provider_ids'] as $id)
+                <input type="hidden" name="provider_ids[]" value="{{ $id }}">
+            @endforeach
+        @else
+            {{-- Fallback security safe check parameter --}}
+            <input type="hidden" name="provider_ids[]" value="{{ $bookingData['provider_id'] ?? '' }}">
+        @endif
+
+        @if ($errors->any())
+            <div style="background: #fee2e2; border: 1px solid #fca5a5; border-radius: 12px; padding: 14px; margin-bottom: 15px;">
+                <ul style="color: #b91c1c; font-size: 13px; list-style-type: none; padding-left: 0; margin: 0;">
+                    @foreach ($errors->all() as $error)
+                        <li style="margin-bottom: 4px;">⚠️ {{ $error }}</li>
+                    @endforeach
+                </ul>
+            </div>
+        @endif
+
+        @if (session('error'))
+            <div style="background: #fee2e2; border: 1px solid #fca5a5; border-radius: 12px; padding: 14px; margin-bottom: 15px; color: #b91c1c; font-size: 13px;">
+                ⚠️ {{ session('error') }}
+            </div>
+        @endif
 
         <button type="button" class="pay-btn" id="pay-btn" onclick="processPayment()">
             <span class="btn-text">{{ __('page.checkout') }}</span>

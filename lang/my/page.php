@@ -152,6 +152,7 @@ return [
     'paymentFailed' => 'Pembayaran gagal: :e',
     'checkout' => 'Pembayaran',
     'orderSummary' => 'Ringkasan Pesanan',
+    'specialist' => 'Pakar',
     'service' => 'Perkhidmatan',
     'date' => 'Tarikh',
     'time' => 'Masa',

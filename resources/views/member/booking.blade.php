@@ -38,12 +38,12 @@
         margin-bottom: 12px;
     }
 
-    /* Date Picker */
-    .date-trigger {
+    /* Input Field Style Triggers */
+    .date-trigger, .time-trigger {
         display: flex;
         align-items: center;
         justify-content: space-between;
-        background: #f5f6f8;
+        background: #fffefe;
         border-radius: 10px;
         padding: 14px 16px;
         cursor: pointer;
@@ -51,38 +51,16 @@
         border: none;
         width: 100%;
         color: #1a1a1a;
+        box-shadow: 0 1px 3px rgba(0,0,0,0.05);
     }
-    .date-trigger:hover { background: #eceef2; }
-    #date-input {
+    .date-trigger:hover, .time-trigger:hover { background: #eceef2; }
+    
+    #date-input, #time-input {
         position: absolute;
         opacity: 0;
         width: 0;
         height: 0;
         pointer-events: none;
-    }
-
-    /* Time Slots */
-    .time-slots {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 10px;
-    }
-    .time-chip {
-        padding: 8px 16px;
-        border-radius: 20px;
-        border: 1.5px solid #e0e0e0;
-        background: #f5f6f8;
-        font-size: 14px;
-        cursor: pointer;
-        transition: all 0.15s;
-        font-family: inherit;
-        color: #1a1a1a;
-    }
-    .time-chip:hover { border-color: #aaa; }
-    .time-chip.selected {
-        background: #1a1a1a;
-        color: #fff;
-        border-color: #1a1a1a;
     }
 
     /* Specialist Cards */
@@ -110,11 +88,13 @@
         transition: border-color 0.15s, background 0.15s;
     }
     .specialist-card:hover { border-color: #aaa; }
+    
     .specialist-card.selected {
         border-color: #1a73e8;
         background: rgba(26,115,232,0.06);
     }
-    .specialist-card input[type="radio"] { display: none; }
+    .specialist-card input[type="checkbox"] { display: none; }
+    
     .specialist-card img {
         width: 56px; height: 56px;
         border-radius: 50%;
@@ -142,8 +122,10 @@
         background: #f5f6f8;
         border-radius: 8px;
         padding: 8px 16px;
-        font-size: 16px;
+        font-size: 18px;
         font-weight: 700;
+        color: #1a73e8;
+        transition: all 0.2s ease;
     }
 
     /* Toast / Alert */
@@ -186,123 +168,170 @@
 </header>
 
 <main class="page-body">
-    {{-- Select Date --}}
-    <div>
-        <p class="section-label">{{ __('page.selectDate') }}</p>
-        <input type="date" id="date-input"
-               min="{{ now()->addDay()->toDateString() }}"
-               max="{{ now()->addDays(30)->toDateString() }}"
-               value="{{ now()->addDay()->toDateString() }}">
-        <button class="date-trigger" id="date-trigger" onclick="document.getElementById('date-input').showPicker()">
-            <span id="date-display">{{ now()->addDay()->format('d/m/Y') }}</span>
-            <span>📅</span>
-        </button>
-    </div>
-
-    {{-- Select Time --}}
-    <div>
-        <p class="section-label">{{ __('page.selectTime') }}</p>
-        <div class="time-slots">
-            @php
-                $timeSlots = ['10:00 AM','11:00 AM','12:00 PM','1:00 PM','2:00 PM','3:00 PM','4:00 PM','5:00 PM'];
-            @endphp
-            @foreach ($timeSlots as $slot)
-                <button class="time-chip {{ $loop->first ? 'selected' : '' }}"
-                        onclick="selectTime(this, '{{ $slot }}')">
-                    {{ $slot }}
-                </button>
-            @endforeach
-        </div>
-    </div>
-
-    {{-- Select Specialist --}}
-    <div>
-        <p class="section-label">{{ __('page.selectSpecialist') }}</p>
-        @if ($providers->isEmpty())
-            <p class="no-specialist">{{ __('page.noSpecialist') }}</p>
-        @else
-            <div class="specialists-scroll">
-                @foreach ($providers as $provider)
-                    <label class="specialist-card" id="card-{{ $provider->id }}"
-                           onclick="selectProvider('{{ $provider->id }}')">
-                        <input type="radio" name="provider_id" value="{{ $provider->id }}">
-                        <img src="{{ $provider->image_url ?? 'https://ui-avatars.com/api/?name=' . urlencode($provider->name) }}"
-                             alt="{{ $provider->name }}">
-                        <span class="sp-name">{{ $provider->name }}</span>
-                        {{-- Change from $provider['rating'] to $provider->rating --}}
-                        <span class="sp-rating">★ {{ number_format($provider->rating, 1) }}</span>
-                    </label>
+    {{-- Validation Error Feedback Block --}}
+    @if ($errors->any())
+        <div style="background: #fee2e2; border: 1px solid #fca5a5; border-radius: 12px; padding: 14px;">
+            <ul style="color: #b91c1c; font-size: 13px; list-style-type: none; padding-left: 0;">
+                @foreach ($errors->all() as $error)
+                    <li style="margin-bottom: 4px;">⚠️ {{ $error }}</li>
                 @endforeach
-            </div>
-        @endif
-    </div>
+            </ul>
+        </div>
+    @endif
 
-    {{-- Price --}}
-    <div>
-        <p class="section-label">{{ __('page.price') }}</p>
-        <span class="price-badge">RM {{ number_format($service['price'], 2) }}</span>
-    </div>
+    {{-- CRITICAL FIX: Wrap your structural inputs AND selector cards inside the single active <form> element block --}}
+    <form id="booking-form" action="{{ route('booking.proceed') }}" method="POST" style="display: flex; flex-direction: column; gap: 28px;">
+        @csrf
+        
+        <!-- Hidden Parameter Handlers -->
+        <input type="hidden" name="service_id" value="{{ $serviceId }}">
+        <input type="hidden" name="service_type" value="{{ $serviceName }}">
+        <input type="hidden" name="booking_date" id="hidden-date">
+        <input type="hidden" name="booking_time" id="hidden-time">
+        <input type="hidden" name="total_price" id="hidden-total">
 
-    {{-- Toast Alert --}}
-    <div class="toast" id="toast">{{ __('page.selectSpecialist') }}</div>
+        {{-- Select Date --}}
+        <div>
+            <p class="section-label">{{ __('page.selectDate') }}</p>
+            <input type="date" id="date-input"
+                   min="{{ now()->addDay()->toDateString() }}"
+                   max="{{ now()->addDays(30)->toDateString() }}"
+                   value="{{ now()->addDay()->toDateString() }}">
+            <button type="button" class="date-trigger" id="date-trigger" onclick="document.getElementById('date-input').showPicker()">
+                <span id="date-display">{{ now()->addDay()->format('d/m/Y') }}</span>
+                <span>📅</span>
+            </button>
+        </div>
 
-    {{-- Confirm Button --}}
-    <button type="button" class="confirm-btn" onclick="proceedToPayment()">
-        {{ __('page.confirmBooking') }}
-    </button>
+        {{-- Select Time --}}
+        <div>
+            <p class="section-label">{{ __('page.selectTime') }}</p>
+            <input type="time" id="time-input" value="10:00">
+            <button type="button" class="time-trigger" id="time-trigger" onclick="document.getElementById('time-input').showPicker()">
+                <span id="time-display">10:00 AM</span>
+                <span>🕒</span>
+            </button>
+        </div>
 
+        {{-- Select Specialist --}}
+        <div>
+            <p class="section-label">{{ __('page.selectSpecialist') }}</p>
+            @if ($providers->isEmpty())
+                <p class="no-specialist">{{ __('page.noSpecialist') }}</p>
+            @else
+                <div class="specialists-scroll">
+                    @foreach ($providers as $provider)
+                        <label class="specialist-card" id="card-{{ $provider->id }}">
+                            <input type="checkbox" name="provider_ids[]" value="{{ $provider->id }}" id="check-{{ $provider->id }}" onchange="toggleProvider('{{ $provider->id }}')">
+                            <img src="{{ $provider->image_url ?? 'https://ui-avatars.com/api/?name=' . urlencode($provider->name) }}" alt="{{ $provider->name }}">
+                            <span class="sp-name">{{ $provider->name }}</span>
+                            <span class="sp-rating">★ {{ number_format($provider->rating, 1) }}</span>
+                        </label>
+                    @endforeach
+                </div>
+            @endif
+        </div>
+
+        {{-- Price --}}
+        <div>
+            <p class="section-label">{{ __('page.price') }}</p>
+            <span class="price-badge" id="display-price">RM {{ number_format($service['price'], 2) }}</span>
+        </div>
+
+        {{-- Toast Alert --}}
+        <div class="toast" id="toast">{{ __('page.selectSpecialist') }}</div>
+
+        {{-- Confirm Button inside form block --}}
+        <button type="button" class="confirm-btn" onclick="proceedToPayment()">
+            {{ __('page.confirmBooking') }}
+        </button>
+    </form>
 </main>
-
-{{-- Hidden form to POST to payment --}}
-<form id="booking-form" method="POST" action="{{ route('booking.proceed') }}" style="display:none">
-    @csrf
-    <input type="hidden" name="service_type"  value="{{ $serviceName }}">
-    <input type="hidden" name="service_id"    value="{{ $serviceId }}">
-    
-    {{-- FIX: Use Object syntax -> instead of array [] --}}
-    <input type="hidden" name="total_price"   value="{{ $service['price'] }}">
-    
-    <input type="hidden" name="booking_date"  id="form-date"     value="{{ now()->addDay()->toDateString() }}">
-    <input type="hidden" name="booking_time"  id="form-time"     value="10:00 AM">
-    <input type="hidden" name="provider_id"   id="form-provider" value="">
-</form>
 
 @endsection
 
 @push('scripts')
 <script>
-    let selectedTime     = "10:00 AM";
-    let selectedProvider = null;
+    // Base configuration parameters
+    const basePrice = parseFloat("{{ $service['price'] }}");
+    let selectedProviders = [];
 
-    // Date picker
-    const dateInput   = document.getElementById('date-input');
+    // Elements cache
+    const dateInput = document.getElementById('date-input');
     const dateDisplay = document.getElementById('date-display');
-    dateInput.addEventListener('change', function () {
-        const [y, m, d] = this.value.split('-');
-        dateDisplay.textContent = `${d}/${m}/${y}`;
-        document.getElementById('form-date').value = this.value;
+    const timeInput = document.getElementById('time-input');
+    const timeDisplay = document.getElementById('time-trigger').querySelector('span');
+    
+    const hiddenDate = document.getElementById('hidden-date');
+    const hiddenTime = document.getElementById('hidden-time');
+    const hiddenTotal = document.getElementById('hidden-total');
+
+    // Initialize hidden fields default value state tracking
+    window.addEventListener('DOMContentLoaded', () => {
+        hiddenDate.value = dateInput.value;
+        
+        // Formulating initial 10:00 AM string formatting logic natively 
+        hiddenTime.value = "10:00 AM";
+        hiddenTotal.value = basePrice.toFixed(2);
     });
 
-    // Time chip selection
-    function selectTime(el, time) {
-        document.querySelectorAll('.time-chip').forEach(c => c.classList.remove('selected'));
-        el.classList.add('selected');
-        selectedTime = time;
-        document.getElementById('form-time').value = time;
-    }
+    // Date picker synchronization 
+    dateInput.addEventListener('change', function () {
+        if (!this.value) return;
+        const [y, m, d] = this.value.split('-');
+        dateDisplay.textContent = `${d}/${m}/${y}`;
+        hiddenDate.value = this.value;
+    });
 
-    // Specialist card selection
-    function selectProvider(id) {
-        document.querySelectorAll('.specialist-card').forEach(c => c.classList.remove('selected'));
-        document.getElementById('card-' + id).classList.add('selected');
-        selectedProvider = id;
-        document.getElementById('form-provider').value = id;
+    // Time Picker Logic with 12-hour formatting translation adjustments
+    timeInput.addEventListener('change', function () {
+        let timeString = this.value; 
+        if (!timeString) return;
+        
+        let [hours, minutes] = timeString.split(':');
+        let ampm = hours >= 12 ? 'PM' : 'AM';
+        hours = hours % 12;
+        hours = hours ? hours : 12; 
+        
+        let formattedTime = `${hours}:${minutes} ${ampm}`;
+        timeDisplay.textContent = formattedTime;
+        hiddenTime.value = formattedTime;
+    });
+
+    // Multiple Checkbox Toggling Engine Logic
+    function toggleProvider(id) {
+        const card = document.getElementById('card-' + id);
+        const checkbox = document.getElementById('check-' + id);
+        const index = selectedProviders.indexOf(id);
+
+        if (checkbox.checked) {
+            if (index === -1) {
+                selectedProviders.push(id);
+            }
+            card.classList.add('selected');
+        } else {
+            if (index > -1) {
+                selectedProviders.splice(index, 1);
+            }
+            card.classList.remove('selected');
+        }
+
         document.getElementById('toast').classList.remove('show');
+        calculateTotalPrice();
     }
 
-    // Confirm booking
+    function calculateTotalPrice() {
+        // Multiplier defaults down safely to base pricing if none chosen visually
+        const multiplier = selectedProviders.length === 0 ? 1 : selectedProviders.length;
+        const currentTotal = basePrice * multiplier;
+
+        document.getElementById('display-price').textContent = `RM ${currentTotal.toFixed(2)}`;
+        hiddenTotal.value = currentTotal.toFixed(2);
+    }
+
+    // Submit Validation Check Block
     function proceedToPayment() {
-        if (!selectedProvider) {
+        if (selectedProviders.length === 0) {
             const toast = document.getElementById('toast');
             toast.classList.add('show');
             setTimeout(() => toast.classList.remove('show'), 3000);

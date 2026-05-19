@@ -153,6 +153,7 @@ return [
     'checkout' => '结算',
     'orderSummary' => '订单摘要',
     'service' => '服务',
+    'specialist' => '专家',
     'date' => '日期',
     'time' => '时间',
     'totalAmount' => '总金额',

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Str;
 
 class BookingController extends Controller
 {
@@ -58,7 +59,6 @@ class BookingController extends Controller
         }
     }
     
-
     public function show(string $id)
     {
         // 1. Fetch the specific service
@@ -68,34 +68,43 @@ class BookingController extends Controller
             abort(404, 'Service not found');
         }
 
-        // 2. Fetch specialists specifically linked to this service UUID
+        // 2. Fetch specialists linked via matching specialty names
         $providers = DB::table('service_providers')
             ->join('services', 'service_providers.specialty', '=', 'services.name')
             ->where('services.id', $id)
-            ->where('service_providers.is_available', true) // Only show active staff
-            ->select('service_providers.*')
+            ->where('service_providers.is_available', true) 
+            // FIX: Explicitly alias key columns to protect against naming collisions
+            ->select(
+                'service_providers.id',
+                'service_providers.name',
+                'service_providers.image_url',
+                'service_providers.rating',
+                'service_providers.specialty'
+            )
             ->get();
 
-
         return view('member.booking', [
-            'service' => (array)$service,
-            'serviceId' => $id,
+            'service'     => (array)$service, // Casts perfectly to match your $service['price'] syntax
+            'serviceId'   => $id,
             'serviceName' => $service->name,
-            'providers' => $providers
+            'providers'   => $providers       // Collection of objects, safe for $provider->id iteration
         ]);
     }
 
     public function proceed(Request $request)
     {
+        // 1. Updated validation rules to support arrays
         $validated = $request->validate([
-            'service_id'   => 'required|uuid',
-            'service_type' => 'required|string',
-            'provider_id'  => 'required|uuid',
-            'booking_date' => 'required|date|after:today',
-            'booking_time' => 'required',
-            'total_price'  => 'required|numeric'
+            'service_id'     => 'required|uuid',
+            'service_type'   => 'required|string',
+            'provider_ids'   => 'required|array|min:1',       // Must be an array with at least 1 item
+            'provider_ids.*' => 'required|uuid',               // Every item inside must be a valid UUID
+            'booking_date'   => 'required|date|after:today',
+            'booking_time'   => 'required|string',
+            'total_price'    => 'required|numeric'
         ]);
 
+        // 2. Flash clean validated data structure directly to the user session
         session(['pending_booking' => $validated]);
 
         return redirect()->route('payment.show');
@@ -122,35 +131,60 @@ class BookingController extends Controller
      */
     public function processPayment(Request $request)
     {
-        $bookingData = $request->all();
+        // 1. Validate incoming checkout payloads from payment form
+        $validated = $request->validate([
+            'service_type'   => 'required|string',
+            'booking_date'   => 'required|date',
+            'booking_time'   => 'required|string',
+            'total_price'    => 'required|numeric|min:0.01',
+            'provider_ids'   => 'required|array|min:1',
+            'provider_ids.*' => 'required|uuid',
+        ]);
 
-
-        // 1. Insert the record into your 'bookings' table
-        // Ensure you have created this table in Supabase!
         try {
-            DB::table('bookings')->insert([
-                'id'           => \Illuminate\Support\Str::uuid(),
-                'user_id'      => Auth::id(), // The logged-in member
-                'service_type' => $bookingData['service_type'],
-                'provider_id'  => $bookingData['provider_id'],
-                'booking_date' => $bookingData['booking_date'],
-                'booking_time' => $bookingData['booking_time'],
-                'total_price'  => $bookingData['total_price'],
-                'status'       => 'confirmed',
-                'created_at'   => now(),
-                'updated_at'   => now(),
-            ]);
+            // 2. Transaction safety block wrapping both table insertions
+            DB::transaction(function () use ($validated) {
+                
+                $bookingId = Str::uuid();
 
-            // 2. Clear the pending session
+                // Insert the SINGLE primary booking record row (No provider_id here anymore!)
+                DB::table('bookings')->insert([
+                    'id'           => $bookingId,
+                    'user_id'      => Auth::id(),
+                    'service_type' => $validated['service_type'],
+                    'booking_date' => $validated['booking_date'],
+                    'booking_time' => $validated['booking_time'],
+                    'total_price'  => $validated['total_price'], // Storing full price on the parent record
+                    'status'       => 'confirmed', // Or 'pending' depending on your business logic
+                    'created_at'   => now(),
+                    'updated_at'   => now(),
+                ]);
+
+                // 3. Prepare mass assignment data rows for your junction table
+                $assignments = [];
+                foreach ($validated['provider_ids'] as $providerId) {
+                    $assignments[] = [
+                        'id'          => Str::uuid(), // Only keep this if your junction table requires a UUID primary key
+                        'booking_id'  => $bookingId,
+                        'provider_id' => $providerId,
+                        'assigned_at' => now(),
+                    ];
+                }
+
+                // Insert all specialists linked to this single booking atomically
+                DB::table('booking_assignments')->insert($assignments);
+            });
+
+            // 4. Clear the pending session context
             session()->forget('pending_booking');
 
-            // 3. Redirect back with a success flag to show your modal
+            // 5. Redirect back with a success flag to show your modal
             return redirect()->route('home')->with('booking_success', true);
 
         } catch (\Exception $e) {
-            dd('hey', $e->getMessage());
-            return back()->with('error', __('page.bookingSaveError') . ' ' . $e->getMessage());
+            return back()
+                ->withInput()
+                ->with('error', __('page.bookingSaveError') . ' ' . $e->getMessage());
         }
     }
-
 }
