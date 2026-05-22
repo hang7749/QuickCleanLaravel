@@ -156,6 +156,7 @@ return [
     'service' => 'Service',
     'date' => 'Date',
     'time' => 'Time',
+    'createdAt' => 'Created At',
     'totalAmount' => 'Total Amount',
     'confirmAndPay' => 'Confirm & Pay',
     'bookingSaveError' => 'Error saving booking. Please try again.',

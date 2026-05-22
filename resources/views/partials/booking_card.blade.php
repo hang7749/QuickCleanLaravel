@@ -10,13 +10,16 @@
 
     <div class="card-meta">
         <span class="meta-icon">👤</span>
-        <span>{{ $booking->provider_name }}</span>
+        <span>{{ $booking->provider_names }}</span>
         <span class="meta-sep">|</span>
         <span class="meta-icon">📅</span>
         <span>{{ \Carbon\Carbon::parse($booking->booking_date)->format('d M Y') }}</span>
         <span class="meta-sep">|</span>
         <span class="meta-icon">⏰</span>
         <span>{{ $booking->booking_time }}</span>
+        <span class="meta-sep">|</span>
+        <span class="meta-icon">{{ __('page.createdAt') }}:</span>
+        <span>{{ \Carbon\Carbon::parse($booking->created_at)->format('d M Y') }}</span>
     </div>
 
     <div class="card-footer">
@@ -24,7 +27,7 @@
         
         @if(in_array($booking->status, ['pending', 'confirmed']))
             <button class="cancel-btn" onclick="confirmCancel('{{ $booking->id }}')">
-                Cancel Booking
+                {{ __('page.cancel') }}
             </button>
         @endif
     </div>

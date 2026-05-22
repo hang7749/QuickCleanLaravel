@@ -156,6 +156,7 @@ return [
     'specialist' => '专家',
     'date' => '日期',
     'time' => '时间',
+    'createdAt' => '创建于',
     'totalAmount' => '总金额',
     'confirmAndPay' => '确认并支付',
     'bookingSaveError' => '保存预约时出错，请重试。',

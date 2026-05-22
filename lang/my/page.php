@@ -156,6 +156,7 @@ return [
     'service' => 'Perkhidmatan',
     'date' => 'Tarikh',
     'time' => 'Masa',
+    'createdAt' => 'Dibuat Pada',
     'totalAmount' => 'Jumlah Keseluruhan',
     'confirmAndPay' => 'Sahkan & Bayar',
     'bookingSaveError' => 'Ralat menyimpan tempahan. Sila cuba lagi.',

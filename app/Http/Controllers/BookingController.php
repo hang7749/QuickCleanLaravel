@@ -9,30 +9,40 @@ use Illuminate\Support\Str;
 
 class BookingController extends Controller
 {
-    public function index()
-    {
-        $userId = Auth::id();
+public function index()
+{
+    $userId = Auth::id();
 
-        // 1. Fetch Upcoming Bookings (Pending or Confirmed)
-        $upcoming = DB::table('bookings')
-            ->join('service_providers', 'bookings.provider_id', '=', 'service_providers.id')
-            ->where('bookings.user_id', $userId)
-            ->whereIn('bookings.status', ['pending', 'confirmed'])
-            ->select('bookings.*', 'service_providers.name as provider_name')
-            ->orderBy('bookings.booking_date', 'asc')
-            ->get();
+    // 1. Fetch Upcoming Bookings (Pending or Confirmed) with aggregated specialist names
+    $upcoming = DB::table('bookings')
+        ->leftJoin('booking_assignments', 'bookings.id', '=', 'booking_assignments.booking_id')
+        ->leftJoin('service_providers', 'booking_assignments.provider_id', '=', 'service_providers.id')
+        ->where('bookings.user_id', $userId)
+        ->whereIn('bookings.status', ['pending', 'confirmed'])
+        ->select(
+            'bookings.*',
+            DB::raw("string_agg(service_providers.name, ', ') as provider_names") // Aggregates names into a single string for PostgreSQL
+        )
+        ->groupBy('bookings.id') // Required when using aggregate functions like string_agg
+        ->orderBy('bookings.booking_date', 'desc')
+        ->get();
 
-        // 2. Fetch History (Completed or Cancelled)
-        $history = DB::table('bookings')
-            ->join('service_providers', 'bookings.provider_id', '=', 'service_providers.id')
-            ->where('bookings.user_id', $userId)
-            ->whereIn('bookings.status', ['completed', 'cancelled'])
-            ->select('bookings.*', 'service_providers.name as provider_name')
-            ->orderBy('bookings.booking_date', 'desc')
-            ->get();
+    // 2. Fetch History (Completed or Cancelled) with aggregated specialist names
+    $history = DB::table('bookings')
+        ->leftJoin('booking_assignments', 'bookings.id', '=', 'booking_assignments.booking_id')
+        ->leftJoin('service_providers', 'booking_assignments.provider_id', '=', 'service_providers.id')
+        ->where('bookings.user_id', $userId)
+        ->whereIn('bookings.status', ['completed', 'cancelled'])
+        ->select(
+            'bookings.*',
+            DB::raw("string_agg(service_providers.name, ', ') as provider_names")
+        )
+        ->groupBy('bookings.id')
+        ->orderBy('bookings.booking_date', 'desc')
+        ->get();
 
-        return view('member.view_booking', compact('upcoming', 'history'));
-    }
+    return view('member.view_booking', compact('upcoming', 'history'));
+}
 
     /**
      * Cancel a booking
@@ -116,10 +126,10 @@ class BookingController extends Controller
     public function showPayment()
     {
         // Get the data we saved in the session during the previous step
-        $bookingData = session('pending_booking');
+        $bookingData = session('pending_booking', []);
 
         // If someone tries to access /payment without booking first, send them home
-        if (!$bookingData) {
+        if (empty($bookingData)) {
             return redirect()->route('home');
         }
 
