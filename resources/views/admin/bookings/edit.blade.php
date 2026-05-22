@@ -23,13 +23,19 @@
 
             <div style="margin-bottom: 20px;">
                 <label style="display: block; font-weight: 600; margin-bottom: 8px;">{{ __('page.provider') }}</label>
-                <select name="provider_id" class="admin-input" style="width: 100%; padding: 12px; border-radius: 8px; border: 1px solid #e2e8f0;">
+                
+                {{-- FIXED: Changed name to provider_ids[] and added 'multiple' --}}
+                <select name="provider_ids[]" class="admin-input" multiple style="width: 100%; padding: 12px; border-radius: 8px; border: 1px solid #e2e8f0; min-height: 120px;">
                     @foreach($providers as $provider)
-                        <option value="{{ $provider->id }}" {{ $booking->provider_id == $provider->id ? 'selected' : '' }}>
+                        {{-- FIXED: Checking if this provider's ID exists in our active assignment array --}}
+                        <option value="{{ $provider->id }}" {{ in_array($provider->id, $currentProviderIds ?? []) ? 'selected' : '' }}>
                             {{ $provider->name }} ({{ $provider->specialty }})
                         </option>
                     @endforeach
                 </select>
+                <small style="color: #64748b; display: block; margin-top: 6px;">
+                    Hold <strong>Ctrl</strong> (Windows) or <strong>Command</strong> (Mac) to select multiple specialists.
+                </small>
             </div>
 
             <div style="display: flex; gap: 10px;">

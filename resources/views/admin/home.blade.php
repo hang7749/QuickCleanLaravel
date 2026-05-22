@@ -102,7 +102,7 @@
                         @foreach($recentBookings as $booking)
                         <tr>
                             <td style="font-weight: 600;">{{ $booking->service_type }}</td>
-                            <td>{{ $booking->provider_name }}</td>
+                            <td>{{ $booking->provider_names ?? 'Unassigned' }}</td>
                             <td>{{ \Carbon\Carbon::parse($booking->booking_date)->format('d M Y') }} at {{ $booking->booking_time }}</td>
                             {{-- <td>RM {{ number_format($booking->total_price, 2) }}</td> --}}
                             <td>

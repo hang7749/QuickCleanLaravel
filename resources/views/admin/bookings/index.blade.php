@@ -98,7 +98,7 @@
                 <tr>
                     <td style="font-weight: 600;">{{ $booking->created_at }}</td>
                     <td style="font-weight: 600;">{{ $booking->service_type }}</td>
-                    <td>{{ $booking->provider_name }}</td>
+                    <td>{{ $booking->provider_names ?? 'Unassigned' }}</td>
                     <td>{{ \Carbon\Carbon::parse($booking->booking_date)->format('d M') }}, {{ $booking->booking_time }}</td>
                     <td style="font-weight: 700;">RM {{ number_format($booking->total_price, 2) }}</td>
                     <td>
