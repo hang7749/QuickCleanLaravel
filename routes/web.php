@@ -24,6 +24,8 @@ Route::get('/', function () {
 })->name('login');
 
 Route::post('/login', [SupabaseLoginController::class, 'login']);
+Route::get('/auth/google', [SupabaseLoginController::class, 'redirectToGoogle'])->name('google.login');
+Route::get('/auth/google/callback', [SupabaseLoginController::class, 'handleGoogleCallback']);
 
 Route::get('/signup', function () {
     return view('auth.signup');

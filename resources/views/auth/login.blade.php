@@ -60,6 +60,12 @@
                 <hr class="w-full border-gray-100">
             </div>
 
+            <a href="{{ route('google.login') }}"
+                class="mt-6 w-full flex items-center justify-center gap-3 border border-gray-200 py-4 rounded-2xl font-bold text-gray-700 hover:bg-gray-50 transition-all">
+                <img src="https://www.google.com/favicon.ico" class="w-5 h-5">
+                {{ __('page.loginWithGoogle') }}
+            </a>
+
             <p class="text-center mt-8 text-sm text-gray-500">
                 {{ __('page.dontHaveAccount') }}
                 <a href="{{ route('signup') }}" class="text-blue-600 font-bold cursor-pointer hover:underline">

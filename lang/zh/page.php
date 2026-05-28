@@ -59,6 +59,7 @@ return [
 
     'loginTitle' => '登录',
     'loginButton' => '登录',
+    'loginWithGoogle' => '使用 Google 登录',
     'adminLoginTitle' => '管理员登录',
     'loginAsAdmin' => '以管理员身份登录',
     'loginAsUser' => '以用户身份登录',

@@ -59,6 +59,7 @@ return [
 
     'loginTitle' => 'Login',
     'loginButton' => 'Log In',
+    'loginWithGoogle' => 'Login with Google',
     'adminLoginTitle' => 'Admin Login',
     'loginAsAdmin' => 'Login as Admin',
     'loginAsUser' => 'Login as User',

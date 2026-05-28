@@ -59,6 +59,7 @@ return [
 
     'loginTitle' => 'Log Masuk',
     'loginButton' => 'Log Masuk',
+    'loginWithGoogle' => 'Log Masuk dengan Google',
     'adminLoginTitle' => 'Log Masuk Admin',
     'loginAsAdmin' => 'Log Masuk sebagai Admin',
     'loginAsUser' => 'Log Masuk sebagai Pengguna',

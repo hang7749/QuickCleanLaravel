@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Auth;
 use App\Models\User;
 use Illuminate\Support\Facades\DB;
+use Laravel\Socialite\Facades\Socialite;
 
 class SupabaseLoginController extends Controller
 {
@@ -44,6 +45,37 @@ class SupabaseLoginController extends Controller
         Auth::login($user);
 
         return redirect()->intended('/home');
+    }
+
+    public function redirectToGoogle()
+    {
+        return Socialite::driver('google')->redirect();
+    }
+
+    public function handleGoogleCallback()
+    {
+        try {
+            $googleUser = Socialite::driver('google')->user();
+
+            // Sync with local Laravel users table
+            $user = User::updateOrCreate(
+                ['email' => $googleUser->email],
+                [
+                    'name'      => $googleUser->name,
+                    'username'  => $googleUser->name,
+                    'google_id' => $googleUser->id,
+                    'password'  => bcrypt(\Illuminate\Support\Str::random(16)),
+                ]
+            );
+
+            // Log into Laravel session
+            Auth::login($user);
+
+            return redirect('/home');
+
+        } catch (\Exception $e) {
+            return redirect('/')->withErrors(['email' => 'Google sign-in failed: ' . $e->getMessage()]);
+        }
     }
 
     public function register(Request $request)
