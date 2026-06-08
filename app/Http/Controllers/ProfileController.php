@@ -77,6 +77,6 @@ class ProfileController extends Controller
         request()->session()->regenerateToken();
         $request->session()->flush();
 
-        return redirect()->route('login'); // change to route('login') when auth is set up
+        return redirect()->route('login');
     }
 }

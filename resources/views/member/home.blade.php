@@ -356,24 +356,24 @@
 
 {{-- Bottom Nav / Contact Bar --}}
 <nav class="bottom-nav">
-    <a href="tel:+123456789" class="nav-item phone">
+    <a href="tel:+6014-8459294" class="nav-item phone">
         <i class="fas fa-phone"></i>
         <span>{{ __('page.phone') }}</span>
     </a>
 
-    <a href="https://wa.me/123456789" target="_blank" class="nav-item whatsapp">
+    <a href="https://wa.me/60148459294" target="_blank" class="nav-item whatsapp">
         <i class="fab fa-whatsapp"></i>
         <span>{{ __('page.whatsapp') }}</span>
     </a>
 
-    <a href="https://mail.google.com/mail/?view=cm&fs=1&to=info@clean.com&su=Service Inquiry&body=Hello"
+    <a href="https://mail.google.com/mail/?view=cm&fs=1&to=melissa.abfx@gmail.com&su=Service Inquiry&body=Hello"
        target="_blank"
        class="nav-item email">
         <i class="fas fa-envelope"></i>
         <span>{{ __('page.email') }}</span>
     </a>
 
-    <a href="https://m.me/YOUR_PAGE_ID" target="_blank" class="nav-item messenger">
+    <a href="https://www.facebook.com/share/1DAtMD8pPT" target="_blank" class="nav-item messenger">
         <i class="fab fa-facebook-messenger"></i>
         <span>{{ __('page.messenger') }}</span>
     </a>
