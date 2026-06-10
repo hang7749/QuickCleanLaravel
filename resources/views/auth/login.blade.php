@@ -66,6 +66,12 @@
                 {{ __('page.loginWithGoogle') }}
             </a>
 
+            <a href="{{ route('facebook.login') }}"
+                class="mt-4 w-full flex items-center justify-center gap-3 border border-gray-200 py-4 rounded-2xl font-bold text-gray-700 hover:bg-gray-50 transition-all">
+                <i class="fab fa-facebook text-[#1877F2] text-xl"></i>
+                {{ __('page.loginWithFacebook') }}
+            </a>
+
             <p class="text-center mt-8 text-sm text-gray-500">
                 {{ __('page.dontHaveAccount') }}
                 <a href="{{ route('signup') }}" class="text-blue-600 font-bold cursor-pointer hover:underline">

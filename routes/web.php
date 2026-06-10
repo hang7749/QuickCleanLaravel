@@ -14,6 +14,7 @@ use App\Http\Controllers\Admin\AdminListController;
 use App\Http\Middleware\EnsureUserIsAdmin;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Http;
+use Laravel\Socialite\Facades\Socialite;
 
 Route::get('/', function () {
     return view('welcome');
@@ -26,6 +27,8 @@ Route::get('/', function () {
 Route::post('/login', [SupabaseLoginController::class, 'login']);
 Route::get('/auth/google', [SupabaseLoginController::class, 'redirectToGoogle'])->name('google.login');
 Route::get('/auth/google/callback', [SupabaseLoginController::class, 'handleGoogleCallback']);
+Route::get('/login/facebook', [SupabaseLoginController::class, 'redirectToFacebook'])->name('facebook.login');
+Route::get('/login/facebook/callback', [SupabaseLoginController::class, 'handleFacebookCallback']);
 
 Route::get('/signup', function () {
     return view('auth.signup');

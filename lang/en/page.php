@@ -60,6 +60,7 @@ return [
     'loginTitle' => 'Login',
     'loginButton' => 'Log In',
     'loginWithGoogle' => 'Login with Google',
+    'loginWithFacebook' => 'Login with Facebook',
     'adminLoginTitle' => 'Admin Login',
     'loginAsAdmin' => 'Login as Admin',
     'loginAsUser' => 'Login as User',

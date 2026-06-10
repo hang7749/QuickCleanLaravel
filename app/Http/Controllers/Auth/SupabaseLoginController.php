@@ -78,6 +78,37 @@ class SupabaseLoginController extends Controller
         }
     }
 
+    public function redirectToFacebook()
+    {
+        return Socialite::driver('facebook')->redirect();
+    }
+
+    public function handleFacebookCallback()
+    {
+        try {
+            $facebookUser = Socialite::driver('facebook')->user();
+
+            // Sync with local Laravel users table
+            $user = User::updateOrCreate(
+                ['email' => $facebookUser->email],
+                [
+                    'name'        => $facebookUser->name,
+                    'username'    => str_replace(' ', '', $facebookUser->name), // Removes spaces for a cleaner username
+                    'facebook_id' => $facebookUser->id, // Optional: if you track social IDs
+                    'password'    => bcrypt(\Illuminate\Support\Str::random(16)),
+                ]
+            );
+
+            // Log into Laravel session
+            Auth::login($user);
+
+            return redirect('/home');
+
+        } catch (\Exception $e) {
+            return redirect('/')->withErrors(['email' => 'Facebook sign-in failed.']);
+        }
+    }
+
     public function register(Request $request)
     {
         // 1. Add username to validation
